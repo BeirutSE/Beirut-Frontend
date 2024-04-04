@@ -1,32 +1,59 @@
-import { Text, View, ImageBackground, StyleSheet } from 'react-native';
+import { Text, View, ImageBackground, StyleSheet, SafeAreaView, StatusBar} from 'react-native';
+import React, { useCallback } from 'react';
 import { Link } from 'expo-router';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
-export default function App() {
+SplashScreen.preventAutoHideAsync();
+
+export default function Index() {
+    const [fontsLoaded, fontError] = useFonts({
+        'Hanken Grotesk': require('../assets/fonts/HankenGrotesk-VariableFont_wght.ttf'),
+        'Hanken Grotesk Italic': require('../assets/fonts/HankenGrotesk-Italic-VariableFont_wght.ttf'),
+    });
+
+    const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded || fontError) {
+            await SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded, fontError]);
+
+    if (!fontsLoaded && !fontError) {
+        return null;
+    }
+
     return (
-        <View style={{ backgroundColor: "#000", flex: 1 }}>
-            <View style={{ display: "flex", flexDirection: "column", padding: "20px" }}>
-                <Text style={styles.meetText}>Meet</Text>
-                <Text style={styles.beirutText}>Beirut!</Text>
-            </View>
-            <View style={styles.circle}>
+        <>
+            <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
+                <StatusBar barStyle="light-content" />
+                <View style={{ display: "flex", flexDirection: "column", padding: "20px" }}>
+                    <Text style={styles.meetText}>Meet</Text>
+                    <Text style={styles.beirutText}>Beirut!</Text>
+                </View>
+                <View style={styles.circle}>
+                    <ImageBackground
+                        source={require('../assets/beirut.png')}
+                        style={styles.imageBackground}
+                        resizeMode="cover"
+                    >
+                    </ImageBackground>
+                </View>
+                <Link href="/main" style={styles.continue}>Tap to Continue</Link>
                 <ImageBackground
-                    source={require('../assets/beirut.png')}
-                    style={styles.imageBackground}
+                    source={require('../assets/wave.png')}
+                    style={styles.wave}
                     resizeMode="cover"
-                >
-                </ImageBackground>
-            </View>
-            <Link href="/main" style={styles.continue}>Tap to Continue</Link>
-            <ImageBackground
-                source={require('../assets/wave.png')}
-                style={styles.wave}
-                resizeMode="cover"
-            ></ImageBackground>
-        </View>
+                ></ImageBackground>
+            </SafeAreaView>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#000',
+        flex: 1,
+    },
     meetText: {
         fontFamily: "Hanken Grotesk",
         fontStyle: "normal",
@@ -34,14 +61,15 @@ const styles = StyleSheet.create({
         fontSize: 80,
         lineHeight: 91,
         color: "#fff",
-        left: "20%",
+        left: "5%",
+
     },
     imageBackground: {
         position: "relative",
-        width: "215px",
-        height: "303.67px",
+        width: "100%",
+        height: "100%",
         top: "17%",
-        left: "5%"
+        left: "5%",
     },
     circle: {
         width: 200,
@@ -51,24 +79,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        right: "20%",
+        right: "10%",
         top: "30%",
     },
     beirutText: {
-        fontFamily: "Hanken Grotesk",
+        fontFamily: "Hanken Grotesk Italic",
         fontStyle: "italic",
         fontWeight: "700",
         fontSize: 80,
         lineHeight: 91,
         color: "#fff",
-        left: "20%",
+        left: "5%",
     },
     wave: {
-        width: "100%",
-        height: "150px",
         position: "absolute",
-        bottom: 0,
-        left: 0,
+        bottom: "-4%",
+        width: "100%",
+        height: 100
     },
     continue: {
         fontFamily: "Hanken Grotesk",
@@ -78,7 +105,7 @@ const styles = StyleSheet.create({
         lineHeight: 23,
         color: "#fff",
         position: "absolute",
-        bottom: "25%",
-        left: "42%",
+        bottom: "15%",
+        left: "30%",
     }
 });

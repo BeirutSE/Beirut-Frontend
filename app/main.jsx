@@ -6,7 +6,7 @@ export default function Main() {
     return (
         <View style={{ backgroundColor: "#000", flex: 1 }}>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 }}>
-                <View style={{ display: "flex", flexDirection: "row", padding: "20px", justifyContent: "flex-start" }}>
+                <View style={{ display: "flex", flexDirection: "row", paddingBottom: 20, paddingRight: 20, justifyContent: "flex-start" }}>
                     <View style={styles.icon}>
                     </View>
                     <Text style={styles.helloText}>Hello {user}!</Text>
@@ -17,62 +17,62 @@ export default function Main() {
             </View>
             <View style={{ display: "flex", width: "500px", alignSelf: "center" }}>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                    <View style={{ display: "flex", flexDirection: "column", padding: "20px", borderRadius: 20, borderColor: 'white', borderWidth: 1 }}>
+                    <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1 }}>
                         <View style={styles.chat}>
-                            <ImageBackground source={require('../assets/chat.png')} style={{ width: "40px", height: "40px" }} />
+                            <ImageBackground source={require('../assets/chat.png')} style={{ width: 40, height: 40 }} />
                         </View>
-                        <Text style={{ color: "#fff", paddingTop: "15px" }}>Chat with Beirut</Text>
+                        <Text style={{ color: "#fff", paddingTop: 15 }}>Chat with Beirut</Text>
                     </View>
-                    <View style={{ display: "flex", flexDirection: "column", padding: "20px", borderRadius: 20, borderColor: 'white', borderWidth: 1 }}>
+                    <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1 }}>
                         <View style={styles.chat}>
-                            <ImageBackground source={require('../assets/voice.png')} style={{ width: "40px", height: "40px" }} />
+                            <ImageBackground source={require('../assets/voice.png')} style={{ width: 40, height: 40 }} />
                         </View>
-                        <Text style={styles.iconText}>Talk to Beirut</Text>
+                        <Text style={{ color: "#fff", paddingTop: 15, paddingLeft: 5 }}>Talk to Beirut</Text>
                     </View>
                 </View>
-                <View style={{ display: "flex", flexDirection: "column", padding: "20px", borderRadius: 20, borderColor: 'white', borderWidth: 1, top: "20%" }}>
+                <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1, top: "10%" }}>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 }}>
-                        <Text style={{ color: "#fff", fontWeight: 500, fontSize: "20px" }}>Restaurants</Text>
-                        <Text style={{ color: "#fff" }}>View All</Text>
+                        <Text style={{ color: "#fff", fontWeight: 500, fontSize: 20, paddingBottom: 10 }}>Restaurants</Text>
+                        <Text style={{ color: "#fff", paddingBottom: 5 }}>View All</Text>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <View style={{ flexDirection: "column", padding: "15px" }}>
-                            <View style={styles.chat}>
-                                <ImageBackground source={require('../assets/pizza.png')} style={{ width: "75px", height: "75px" }} />
+                        <View style={{ flexDirection: "column", padding: 5 }}>
+                            <View style={styles.restaurantIcon}>
+                                <ImageBackground source={require('../assets/icons/pizza.png')} style={{ width: 75, height: 75 }} />
                             </View>
                             <Text style={styles.iconText}>Italian</Text>
                         </View>
-                        <View style={{ flexDirection: "column", padding: "15px" }}>
-                            <View style={styles.chat}>
-                                <ImageBackground source={require('../assets/pizza.png')} style={{ width: "75px", height: "75px" }} />
+                        <View style={{ flexDirection: "column" }}>
+                            <View style={styles.restaurantIcon}>
+                                <ImageBackground source={require('../assets/icons/noodles.png')} style={{ width: 60, height: 60 }} />
                             </View>
-                            <Text style={styles.iconText}>Italian</Text>
+                            <Text style={styles.iconText}>Asian</Text>
                         </View>
-                        <View style={{ flexDirection: "column", padding: "15px" }}>
-                            <View style={styles.chat}>
-                                <ImageBackground source={require('../assets/pizza.png')} style={{ width: "75px", height: "75px" }} />
+                        <View style={{ flexDirection: "column", padding: 5 }}>
+                            <View style={styles.restaurantIcon}>
+                                <ImageBackground source={require('../assets/icons/mexican-hat.png')} style={{ width: 60, height: 60 }} />
                             </View>
-                            <Text style={styles.iconText}>Italian</Text>
+                            <Text style={styles.iconText}>Mexican</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <View style={{ flexDirection: "column", padding: "15px" }}>
-                            <View style={styles.chat}>
-                                <ImageBackground source={require('../assets/pizza.png')} style={{ width: "75px", height: "75px" }} />
+                        <View style={{ flexDirection: "column", padding: 5 }}>
+                            <View style={styles.restaurantIcon}>
+                                <ImageBackground source={require('../assets/icons/lebanese 1.png')} style={{ width: 60, height: 60 }} />
                             </View>
-                            <Text style={styles.iconText}>Italian</Text>
+                            <Text style={styles.iconText}>Lebanese</Text>
                         </View>
-                        <View style={{ flexDirection: "column", padding: "15px" }}>
-                            <View style={styles.chat}>
-                                <ImageBackground source={require('../assets/pizza.png')} style={{ width: "75px", height: "75px" }} />
+                        <View style={{ flexDirection: "column", padding: 5 }}>
+                            <View style={styles.restaurantIcon}>
+                                <ImageBackground source={require('../assets/icons/burger 1.png')} style={{ width: 50, height: 50 }} />
                             </View>
-                            <Text style={styles.iconText}>Italian</Text>
+                            <Text style={styles.iconText}>American</Text>
                         </View>
-                        <View style={{ flexDirection: "column", padding: "15px" }}>
-                            <View style={styles.chat}>
-                                <ImageBackground source={require('../assets/pizza.png')} style={{ width: "75px", height: "75px" }} />
+                        <View style={{ flexDirection: "column", padding: 5 }}>
+                            <View style={styles.restaurantIcon}>
+                                <ImageBackground source={require('../assets/icons/cupcake 1.png')} style={{ width: 60, height: 60 }} />
                             </View>
-                            <Text style={styles.iconText}>Italian</Text>
+                            <Text style={styles.iconText}>Dessert</Text>
                         </View>
                     </View>
                 </View>
@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         lineHeight: 24,
         color: "#fff",
-        paddingTop: "15px",
-        paddingLeft: "20px",
+        paddingTop: 15,
+        paddingLeft: 20,
     },
     icon: {
         width: 50,
@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'white'
+        borderColor: 'white',
+        bottom: 10
     },
     chat: {
         width: 100,
@@ -119,9 +120,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         opacity: 0.8,
     },
+    restaurantIcon: {
+        width: 100,
+        height: 100,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        opacity: 1,
+    },
     iconText: {
         color: "#fff",
-        paddingTop: "15px",
+        paddingTop: 10,
         alignSelf: "center"
     }
 });
