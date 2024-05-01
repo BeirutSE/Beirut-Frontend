@@ -1,46 +1,37 @@
-import { View, Text, ImageBackground, StyleSheet, TextInput } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React from "react"
 import { Link } from 'expo-router'
 
 export default function Chat() {
     const [text, onChangeText] = React.useState(' ')
-    const [isInputFocused, setIsInputFocused] = React.useState(false)
 
-    const handleFocus = () => {
-        setIsInputFocused(true);
-    };
-
-    const handleBlur = () => {
-        setIsInputFocused(false);
-    };
-    
     return (
-        <View style={{ backgroundColor: "#000", flex: 1 }}>
-            <Link href="/main">
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                    <ImageBackground source={require('../assets/arrow.png')} style={{ width: 20, height: 20, top: "9%", left: "2%" }} />
-                    <Text style={styles.Beirut}>Beirut</Text>
-                </View>
-            </Link>
-            {!isInputFocused && (
-                <View style={{ display: "flex", flex: "column", top: "20%" }}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ backgroundColor: "#000", flex: 1 }} >
+            <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
+                <Link href="/main">
+                    <View style={{ display: "flex", flexDirection: "row" }}>
+                        <ImageBackground source={require('../assets/arrow.png')} style={{ width: 20, height: 20, top: "9%", left: "2%" }} />
+                        <Text style={styles.Beirut}>Beirut</Text>
+                    </View>
+                </Link>
+                <View style={{ display: "flex", flex: "column" }}>
                     <View style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <View style={styles.circle}></View>
                         <ImageBackground source={require('../assets/beirut.png')} style={styles.imageBackground} />
                     </View>
                     <Text style={styles.TodayText}>What do you feel like today?</Text>
                 </View>
-            )}
-            <View style={{ display: "flex", flexDirection: "row", position: "absolute", bottom: isInputFocused ? "45%" : "5%", left: "10%", borderRadius: 20, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300 }}>
-                <View style={{ display: "flex" }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeText} onFocus={handleFocus} onBlur={handleBlur}  placeholderTextColor="white" placeholder='Message Beirut...' > 
-                    </TextInput>
-                </View>
-                <View style={{ display: "flex" }}>
-                    <ImageBackground source={require('../assets/send.png')} style={{ width: 20, height: 20 }} />
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 20, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, bottom: "5%" }}>
+                    <View style={{ display: "flex" }}>
+                        <TextInput style={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Message Beirut...'>
+                        </TextInput>
+                    </View>
+                    <View style={{ display: "flex" }}>
+                        <ImageBackground source={require('../assets/send.png')} style={{ width: 20, height: 20 }} />
+                    </View>
                 </View>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
