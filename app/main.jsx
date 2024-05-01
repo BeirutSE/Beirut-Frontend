@@ -1,4 +1,5 @@
 import { View, Text, ImageBackground, StyleSheet } from 'react-native';
+import { Link } from 'expo-router'
 
 const user = "Beirut";
 
@@ -17,12 +18,14 @@ export default function Main() {
             </View>
             <View style={{ display: "flex", width: "500px", alignSelf: "center" }}>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                    <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1 }}>
-                        <View style={styles.chat}>
-                            <ImageBackground source={require('../assets/chat.png')} style={{ width: 40, height: 40 }} />
+                    <Link href="/chat">
+                        <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1 }}>
+                            <View style={styles.chat}>
+                                <ImageBackground source={require('../assets/chat.png')} style={{ width: 40, height: 40 }} />
+                            </View>
+                            <Text style={{ color: "#fff", paddingTop: 15 }}>Chat with Beirut</Text>
                         </View>
-                        <Text style={{ color: "#fff", paddingTop: 15 }}>Chat with Beirut</Text>
-                    </View>
+                    </Link>
                     <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1 }}>
                         <View style={styles.chat}>
                             <ImageBackground source={require('../assets/voice.png')} style={{ width: 40, height: 40 }} />
