@@ -1,6 +1,7 @@
 import { View, Text, ImageBackground, StyleSheet, StatusBar } from 'react-native';
 import { Link } from 'expo-router'
 import React, { useEffect, useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Main() {
     const [username, setUsername] = useState('');
@@ -60,7 +61,7 @@ export default function Main() {
                         <Text style={{ color: "#fff", paddingBottom: 5 }}>View All</Text>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Italian')}>
+                        <Link href={`/restaurants`}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/pizza.png')} style={{ width: 75, height: 75 }} />
@@ -68,7 +69,7 @@ export default function Main() {
                                 <Text style={styles.iconText}>Italian</Text>
                             </View>
                         </Link>
-                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Asian')}>
+                        <Link href={`/restaurants`}>
                             <View style={{ flexDirection: "column" }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/noodles.png')} style={{ width: 60, height: 60 }} />
@@ -76,7 +77,7 @@ export default function Main() {
                                 <Text style={styles.iconText}>Asian</Text>
                             </View>
                         </Link>
-                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Mexican')}>
+                        <Link href={`/restaurants`}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/mexican-hat.png')} style={{ width: 60, height: 60 }} />
@@ -86,7 +87,7 @@ export default function Main() {
                         </Link>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Lebanese')}>
+                        <Link href={`/restaurants`}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/lebanese 1.png')} style={{ width: 60, height: 60 }} />
@@ -94,7 +95,7 @@ export default function Main() {
                                 <Text style={styles.iconText}>Lebanese</Text>
                             </View>
                         </Link>
-                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('American')}>
+                        <Link href={`/restaurants`}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/burger 1.png')} style={{ width: 50, height: 50 }} />
@@ -102,7 +103,7 @@ export default function Main() {
                                 <Text style={styles.iconText}>American</Text>
                             </View>
                         </Link>
-                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Dessert')}>
+                        <Link href={`/restaurants`}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/cupcake 1.png')} style={{ width: 60, height: 60 }} />

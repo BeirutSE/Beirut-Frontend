@@ -1,6 +1,7 @@
 import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable } from 'react-native';
 import { Link } from 'expo-router';
-import React from 'react'
+import React, { useEffect } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function login() {
     const [username, setUsername] = React.useState('')
@@ -14,6 +15,10 @@ export default function login() {
             console.error("Failed to save username:", username, "due to error:", error)
         }
     }
+
+    useEffect(() => {
+        saveUsername(username)
+    }, [username])
 
     const onChangeTextUsername = (text) => {
         setUsername(text)
@@ -66,7 +71,9 @@ export default function login() {
                 </View>
             </View>
             <Pressable style={styles.enterButton} onPress={loginMain}>
+                <Link href="/main">
                     <Text style={styles.text}>Login</Text>
+                </Link>
             </Pressable>
             <View>
                 <Link href="/signup" style={styles.account}>

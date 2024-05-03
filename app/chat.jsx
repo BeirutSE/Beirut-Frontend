@@ -9,7 +9,7 @@ export default function Chat() {
     // Function to send a message
     const sendMessage = async () => {
         try {
-            const response = await fetch('your_api_url', {
+            const response = await fetch('https://10.21.131.94/sendMessage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -17,28 +17,12 @@ export default function Chat() {
                 body: JSON.stringify({ message: text }),
             });
             const data = await response.json();
-            setMessages([...messages, { text: text, sender: 'user' }]);
+            setMessages([...messages, { text, sender: 'user' }]);
             setText('');
         } catch (error) {
             console.error('Error sending message:', error);
         }
     };
-
-    // Function to receive messages
-    const receiveMessages = async () => {
-        try {
-            const response = await fetch('your_api_url');
-            const data = await response.json();
-            // Assuming data is an array of messages
-            setMessages([...messages, ...data]);
-        } catch (error) {
-            console.error('Error receiving messages:', error);
-        }
-    };
-
-    useEffect(() => {
-        receiveMessages(); // Fetch messages when component mounts
-    }, []);
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ backgroundColor: "#000", flex: 1 }} >

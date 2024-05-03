@@ -7,6 +7,8 @@ export default function login() {
     const [password, setPassword] = React.useState('')
     const [confirmPassword, setConfirmPassword] = React.useState('')
     const [email, setEmail] = React.useState('')
+    const [gender, setGender] = React.useState('')
+    const [phoneNumber, setPhoneNumber] = React.useState('')
 
     const onChangeTextUsername = (text) => {
         setUsername(text)
@@ -24,12 +26,21 @@ export default function login() {
         setEmail(text)
     }
 
+    const onChangeTextGender = (text) => {
+        setGender(text)
+    }
+
+    const onChangeTextPhoneNumber = (text) => {
+        setPhoneNumber(text)
+    }
+
     const signUp = async () => {
-        console.log("Signing up with username:", username, "and password:", password, "and email:", email)
+        console.log("Signing up with username:", username, "password:", password, "email:", email, "phoneNumber:", phoneNumber)
         const userData = {
             username: username,
             password: password,
-            email: email
+            email: email,
+            phoneNumber: phoneNumber
         };
 
         try {
@@ -57,22 +68,25 @@ export default function login() {
 
     return (
         <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
-            <View style={{ display: "flex", justifyContent: "center", alignItems: "center", top: 70 }}>
+            <View style={{ display: "flex", justifyContent: "center", alignItems: "center", top: 10 }}>
                 <View style={styles.circle}></View>
                 <ImageBackground source={require('../assets/beirut.png')} style={styles.imageBackground} />
             </View>
             <View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 50 }}>
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 10 }}>
                     <TextInput style={styles.inputText} onChangeText={onChangeTextEmail} placeholderTextColor="#fff" placeholder='Email' />
                 </View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 70 }}>
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 30 }}>
                     <TextInput stbyle={styles.inputText} onChangeText={onChangeTextUsername} placeholderTextColor="#fff" placeholder='Username' />
                 </View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 90 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Password' />
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 50 }}>
+                    <TextInput style={styles.inputText} onChangeText={onChangeTextPassword} placeholderTextColor="#fff" placeholder='Password' />
                 </View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 110 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Confirm Password' />
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 70 }}>
+                    <TextInput style={styles.inputText} onChangeText={onChangeTextConfirmPassword} placeholderTextColor="#fff" placeholder='Confirm Password' />
+                </View>
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 90 }}>
+                    <TextInput style={styles.inputText} onChangeText={onChangeTextPhoneNumber} placeholderTextColor="#fff" placeholder='Phone Number' />
                 </View>
             </View>
             <Pressable style={styles.enterButton}>
