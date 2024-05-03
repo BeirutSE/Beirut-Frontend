@@ -1,11 +1,16 @@
-import { View, Text, ImageBackground, StyleSheet } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, StatusBar } from 'react-native';
 import { Link } from 'expo-router'
 
 const user = "Beirut";
 
 export default function Main() {
+    const navigateToRestaurant = (restaurantType) => {
+        console.log("Navigating to restaurant:", restaurantType);
+    };
+
     return (
         <View style={{ backgroundColor: "#000", flex: 1 }}>
+            <StatusBar barStyle="light-content" />
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 }}>
                 <View style={{ display: "flex", flexDirection: "row", paddingBottom: 20, paddingRight: 20, justifyContent: "flex-start" }}>
                     <View style={styles.icon}>
@@ -39,44 +44,56 @@ export default function Main() {
                         <Text style={{ color: "#fff", paddingBottom: 5 }}>View All</Text>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <View style={{ flexDirection: "column", padding: 5 }}>
-                            <View style={styles.restaurantIcon}>
-                                <ImageBackground source={require('../assets/icons/pizza.png')} style={{ width: 75, height: 75 }} />
+                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Italian')}>
+                            <View style={{ flexDirection: "column", padding: 5 }}>
+                                <View style={styles.restaurantIcon}>
+                                    <ImageBackground source={require('../assets/icons/pizza.png')} style={{ width: 75, height: 75 }} />
+                                </View>
+                                <Text style={styles.iconText}>Italian</Text>
                             </View>
-                            <Text style={styles.iconText}>Italian</Text>
-                        </View>
-                        <View style={{ flexDirection: "column" }}>
-                            <View style={styles.restaurantIcon}>
-                                <ImageBackground source={require('../assets/icons/noodles.png')} style={{ width: 60, height: 60 }} />
+                        </Link>
+                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Asian')}>
+                            <View style={{ flexDirection: "column" }}>
+                                <View style={styles.restaurantIcon}>
+                                    <ImageBackground source={require('../assets/icons/noodles.png')} style={{ width: 60, height: 60 }} />
+                                </View>
+                                <Text style={styles.iconText}>Asian</Text>
                             </View>
-                            <Text style={styles.iconText}>Asian</Text>
-                        </View>
-                        <View style={{ flexDirection: "column", padding: 5 }}>
-                            <View style={styles.restaurantIcon}>
-                                <ImageBackground source={require('../assets/icons/mexican-hat.png')} style={{ width: 60, height: 60 }} />
+                        </Link>
+                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Mexican')}>
+                            <View style={{ flexDirection: "column", padding: 5 }}>
+                                <View style={styles.restaurantIcon}>
+                                    <ImageBackground source={require('../assets/icons/mexican-hat.png')} style={{ width: 60, height: 60 }} />
+                                </View>
+                                <Text style={styles.iconText}>Mexican</Text>
                             </View>
-                            <Text style={styles.iconText}>Mexican</Text>
-                        </View>
+                        </Link>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <View style={{ flexDirection: "column", padding: 5 }}>
-                            <View style={styles.restaurantIcon}>
-                                <ImageBackground source={require('../assets/icons/lebanese 1.png')} style={{ width: 60, height: 60 }} />
+                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Lebanese')}>
+                            <View style={{ flexDirection: "column", padding: 5 }}>
+                                <View style={styles.restaurantIcon}>
+                                    <ImageBackground source={require('../assets/icons/lebanese 1.png')} style={{ width: 60, height: 60 }} />
+                                </View>
+                                <Text style={styles.iconText}>Lebanese</Text>
                             </View>
-                            <Text style={styles.iconText}>Lebanese</Text>
-                        </View>
-                        <View style={{ flexDirection: "column", padding: 5 }}>
-                            <View style={styles.restaurantIcon}>
-                                <ImageBackground source={require('../assets/icons/burger 1.png')} style={{ width: 50, height: 50 }} />
+                        </Link>
+                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('American')}>
+                            <View style={{ flexDirection: "column", padding: 5 }}>
+                                <View style={styles.restaurantIcon}>
+                                    <ImageBackground source={require('../assets/icons/burger 1.png')} style={{ width: 50, height: 50 }} />
+                                </View>
+                                <Text style={styles.iconText}>American</Text>
                             </View>
-                            <Text style={styles.iconText}>American</Text>
-                        </View>
-                        <View style={{ flexDirection: "column", padding: 5 }}>
-                            <View style={styles.restaurantIcon}>
-                                <ImageBackground source={require('../assets/icons/cupcake 1.png')} style={{ width: 60, height: 60 }} />
+                        </Link>
+                        <Link href={`/restaurant?restaurantType=italian`} onPress={() => navigateToRestaurant('Dessert')}>
+                            <View style={{ flexDirection: "column", padding: 5 }}>
+                                <View style={styles.restaurantIcon}>
+                                    <ImageBackground source={require('../assets/icons/cupcake 1.png')} style={{ width: 60, height: 60 }} />
+                                </View>
+                                <Text style={styles.iconText}>Dessert</Text>
                             </View>
-                            <Text style={styles.iconText}>Dessert</Text>
-                        </View>
+                        </Link>
                     </View>
                 </View>
             </View>

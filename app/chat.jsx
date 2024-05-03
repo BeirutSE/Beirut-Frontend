@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, StatusBar } from 'react-native'
 import React from "react"
 import { Link } from 'expo-router'
 
@@ -7,7 +7,8 @@ export default function Chat() {
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ backgroundColor: "#000", flex: 1 }} >
-            <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
+            <StatusBar barStyle="light-content" />
+            <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
                 <Link href="/main">
                     <View style={{ display: "flex", flexDirection: "row" }}>
                         <ImageBackground source={require('../assets/arrow.png')} style={{ width: 20, height: 20, top: "9%", left: "2%" }} />
