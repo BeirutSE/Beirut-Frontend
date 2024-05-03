@@ -1,9 +1,25 @@
 import { View, Text, ImageBackground, StyleSheet, StatusBar } from 'react-native';
 import { Link } from 'expo-router'
-
-const user = "Beirut";
+import React, { useEffect, useState } from 'react'
 
 export default function Main() {
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        retrieveUsername(); // Fetch username when component mounts
+    }, []);
+
+    const retrieveUsername = async () => {
+        try {
+            const username = await AsyncStorage.getItem('username')
+            if (username !== null) {
+                setUsername(username);
+            }
+        } catch (error) {
+            console.error("Failed to retrieve username due to error:", error)
+        }
+    }
+
     const navigateToRestaurant = (restaurantType) => {
         console.log("Navigating to restaurant:", restaurantType);
     };
@@ -15,7 +31,7 @@ export default function Main() {
                 <View style={{ display: "flex", flexDirection: "row", paddingBottom: 20, paddingRight: 20, justifyContent: "flex-start" }}>
                     <View style={styles.icon}>
                     </View>
-                    <Text style={styles.helloText}>Hello {user}!</Text>
+                    <Text style={styles.helloText}>Hello {username}!</Text>
                 </View>
                 <View style={styles.bellContainer}>
                     <ImageBackground source={require('../assets/bell.png')} style={{ width: 20, height: 20 }} />
@@ -28,14 +44,14 @@ export default function Main() {
                             <View style={styles.chat}>
                                 <ImageBackground source={require('../assets/chat.png')} style={{ width: 40, height: 40 }} />
                             </View>
-                            <Text style={{ color: "#fff", paddingTop: 15 }}>Chat with Beirut</Text>
+                            <Text style={{ color: "#fff", paddingTop: 15, paddingLeft: 5 }}>Chat with Beirut</Text>
                         </View>
                     </Link>
                     <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1 }}>
                         <View style={styles.chat}>
-                            <ImageBackground source={require('../assets/voice.png')} style={{ width: 40, height: 40 }} />
+                            <ImageBackground source={require('../assets/voice.png')} style={{ width: 40, height: 40, opacity: 0.5 }} />
                         </View>
-                        <Text style={{ color: "#fff", paddingTop: 15, paddingLeft: 5 }}>Talk to Beirut</Text>
+                        <Text style={{ color: "#fff", paddingTop: 15, paddingLeft: 10, opacity: 0.5 }}>Talk to Beirut</Text>
                     </View>
                 </View>
                 <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1, top: "10%" }}>

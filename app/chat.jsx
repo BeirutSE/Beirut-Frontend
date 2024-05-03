@@ -1,9 +1,44 @@
-import { View, Text, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, StatusBar } from 'react-native'
-import React from "react"
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, StatusBar } from 'react-native'
+import React, { useState, useEffect } from "react"
 import { Link } from 'expo-router'
 
 export default function Chat() {
-    const [text, onChangeText] = React.useState(' ')
+    const [text, setText] = useState(' ');
+    const [messages, setMessages] = useState([]);
+
+    // Function to send a message
+    const sendMessage = async () => {
+        try {
+            const response = await fetch('your_api_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: text }),
+            });
+            const data = await response.json();
+            setMessages([...messages, { text: text, sender: 'user' }]);
+            setText('');
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    };
+
+    // Function to receive messages
+    const receiveMessages = async () => {
+        try {
+            const response = await fetch('your_api_url');
+            const data = await response.json();
+            // Assuming data is an array of messages
+            setMessages([...messages, ...data]);
+        } catch (error) {
+            console.error('Error receiving messages:', error);
+        }
+    };
+
+    useEffect(() => {
+        receiveMessages(); // Fetch messages when component mounts
+    }, []);
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ backgroundColor: "#000", flex: 1 }} >
@@ -22,13 +57,20 @@ export default function Chat() {
                     </View>
                     <Text style={styles.TodayText}>What do you feel like today?</Text>
                 </View>
+                {/* Render received messages */}
+                {messages.map((message, index) => (
+                    <View key={index} style={{ alignSelf: message.sender === 'user' ? 'flex-end' : 'flex-start', margin: 10 }}>
+                        <Text style={{ color: '#fff' }}>{message.text}</Text>
+                    </View>
+                ))}
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 20, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, bottom: "5%" }}>
                     <View style={{ display: "flex" }}>
-                        <TextInput style={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Message Beirut...'>
-                        </TextInput>
+                        <TextInput style={styles.inputText} onChangeText={setText} placeholderTextColor="#fff" placeholder='Message Beirut...' value={text} />
                     </View>
                     <View style={{ display: "flex" }}>
-                        <ImageBackground source={require('../assets/send.png')} style={{ width: 20, height: 20 }} />
+                        <TouchableOpacity onPress={sendMessage}>
+                            <ImageBackground source={require('../assets/send.png')} style={{ width: 20, height: 20 }} />
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>

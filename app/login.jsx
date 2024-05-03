@@ -3,10 +3,53 @@ import { Link } from 'expo-router';
 import React from 'react'
 
 export default function login() {
-    const [text, onChangeText] = React.useState(' ')
-    
-    const loginMain = () => {
-        console.log('Login')
+    const [username, setUsername] = React.useState('')
+    const [password, setPassword] = React.useState('')
+
+    // save the username locally to use in the main page
+    const saveUsername = async (username) => {
+        try {
+            await AsyncStorage.setItem('username', username)
+        } catch (error) {
+            console.error("Failed to save username:", username, "due to error:", error)
+        }
+    }
+
+    const onChangeTextUsername = (text) => {
+        setUsername(text)
+    }
+
+    const onChangeTextPassword = (text) => {
+        setPassword(text)
+    }
+
+    const loginMain = async () => {
+        console.log("Logging in with username:", username, "and password:", password)
+
+        try {
+            const response = await fetch('https://10.21.131.94:3002/loginUser', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.parse(JSON.stringify({
+                    username: username,
+                    password: password
+                }))
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Successfully logged in with username:", username);
+                router.push('/main')
+            } else {
+                console.error("Failed to login with username:", username);
+            }
+        } catch (error) {
+            console.error("Failed to login with username:", username, "due to error:", error);
+        }
     }
     return (
         <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
@@ -16,16 +59,15 @@ export default function login() {
             </View>
             <View>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 80 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Username' />
+                    <TextInput style={styles.inputText} onChangeText={onChangeTextUsername} placeholderTextColor="#fff" placeholder='Username' value={username} />
                 </View>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 100 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Password' />
+                    <TextInput style={styles.inputText} onChangeText={onChangeTextPassword} placeholderTextColor="#fff" placeholder='Password' value={password} secureTextEntry={true} />
                 </View>
-            </View> 
-            // implement loginMain function https://docs.expo.dev/router/reference/authentication/
-                <Pressable style={styles.enterButton} onPress={loginMain}>
+            </View>
+            <Pressable style={styles.enterButton} onPress={loginMain}>
                     <Text style={styles.text}>Login</Text>
-                </Pressable>
+            </Pressable>
             <View>
                 <Link href="/signup" style={styles.account}>
                     <Text style={styles.accountText}>Haven't made an account?</Text>

@@ -3,7 +3,58 @@ import { Link } from 'expo-router';
 import React from 'react'
 
 export default function login() {
-    const [text, onChangeText] = React.useState(' ')
+    const [username, setUsername] = React.useState('')
+    const [password, setPassword] = React.useState('')
+    const [confirmPassword, setConfirmPassword] = React.useState('')
+    const [email, setEmail] = React.useState('')
+
+    const onChangeTextUsername = (text) => {
+        setUsername(text)
+    }
+
+    const onChangeTextPassword = (text) => {
+        setPassword(text)
+    }
+
+    const onChangeTextConfirmPassword = (text) => {
+        setConfirmPassword(text)
+    }
+
+    const onChangeTextEmail = (text) => {
+        setEmail(text)
+    }
+
+    const signUp = async () => {
+        console.log("Signing up with username:", username, "and password:", password, "and email:", email)
+        const userData = {
+            username: username,
+            password: password,
+            email: email
+        };
+
+        try {
+            const response = await fetch('https://10.21.131.94:3002/registerUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.parse(JSON.stringify(userData))
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Successfully signed up with username:", username);
+                router.push('/login')
+            } else {
+                console.error("Failed to sign up with username:", username);
+            }
+
+        } catch (error) {
+            console.log("Failed to sign up with username:", username, "due to error:", error);
+        }
+    }
+
     return (
         <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
             <View style={{ display: "flex", justifyContent: "center", alignItems: "center", top: 70 }}>
@@ -12,10 +63,10 @@ export default function login() {
             </View>
             <View>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 50 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Email' />
+                    <TextInput style={styles.inputText} onChangeText={onChangeTextEmail} placeholderTextColor="#fff" placeholder='Email' />
                 </View>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 70 }}>
-                    <TextInput stbyle={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Username' />
+                    <TextInput stbyle={styles.inputText} onChangeText={onChangeTextUsername} placeholderTextColor="#fff" placeholder='Username' />
                 </View>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 90 }}>
                     <TextInput style={styles.inputText} onChangeText={onChangeText} placeholderTextColor="#fff" placeholder='Password' />
