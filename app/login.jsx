@@ -1,13 +1,14 @@
 import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable } from 'react-native';
 import { Link } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import React, { useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function login() {
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const navigation = useNavigation()
 
-    // save the username locally to use in the main page
     const saveUsername = async (username) => {
         try {
             await AsyncStorage.setItem('username', username)
@@ -32,23 +33,23 @@ export default function login() {
         console.log("Logging in with username:", username, "and password:", password)
 
         try {
-            const response = await fetch('https://10.21.131.94:3002/loginUser', {
+            const response = await fetch('https://yourbeirut.tech:3002/loginUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.parse(JSON.stringify({
+                body: JSON.stringify({
                     username: username,
                     password: password
-                }))
+                })
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 console.log("Successfully logged in with username:", username);
-                router.push('/main')
+                navigation.navigate('main')
             } else {
                 console.error("Failed to login with username:", username);
             }
@@ -71,9 +72,7 @@ export default function login() {
                 </View>
             </View>
             <Pressable style={styles.enterButton} onPress={loginMain}>
-                <Link href="/main">
                     <Text style={styles.text}>Login</Text>
-                </Link>
             </Pressable>
             <View>
                 <Link href="/signup" style={styles.account}>

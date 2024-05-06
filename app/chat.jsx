@@ -1,25 +1,48 @@
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, StatusBar } from 'react-native'
-import React, { useState, useEffect } from "react"
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, StatusBar, Pressable, ScrollView, Keyboard } from 'react-native'
+import React, { useState, useEffect, useRef } from "react"
 import { Link } from 'expo-router'
 
 export default function Chat() {
-    const [text, setText] = useState(' ');
-    const [messages, setMessages] = useState([]);
+    const ScrollViewRef = useRef(null);
+    const [chatTag, setChatTag] = useState('')
+    const [message, setMessage] = useState('')
+    const [aiMessage, setAiMessage] = useState('')
+    const [isMessageSent, setIsMessageSent] = useState(false)
+    const [messagesSent, setMessagesSent] = useState([])
 
-    // Function to send a message
+    const onChangeTextMessage = (text) => {
+        setMessage(text)
+        setIsMessageSent(true)
+    }
+
+    
+
     const sendMessage = async () => {
         try {
-            const response = await fetch('https://10.21.131.94/sendMessage', {
+            const response = await fetch('https://yourbeirut.tech:3002/sendMessage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: text }),
+                body: JSON.stringify({
+                    chatTag: chatTag,
+                    message: message
+                }),
             });
             const data = await response.json();
-            setMessages([...messages, { text, sender: 'user' }]);
-            setText('');
-        } catch (error) {
+
+            if (response.ok) {
+                const receivedMessage = data.response;
+                setAiMessage(receivedMessage);
+                console.log('Message sent:', message);
+                console.log('Message received:', receivedMessage);
+                setMessagesSent([...messagesSent, , { text: message, type: 'user' }, { text: receivedMessage, type: 'ai' }]);
+                setMessage('');
+                Keyboard.dismiss();
+            } else {
+                console.error('Failed to send message:', message);
+            }
+        } catch (error) {yy
             console.error('Error sending message:', error);
         }
     };
@@ -34,28 +57,32 @@ export default function Chat() {
                         <Text style={styles.Beirut}>Beirut</Text>
                     </View>
                 </Link>
-                <View style={{ display: "flex", flex: "column" }}>
-                    <View style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <View style={styles.circle}></View>
-                        <ImageBackground source={require('../assets/beirut.png')} style={styles.imageBackground} />
+                {!isMessageSent && (
+                    <View style={{ display: "flex", flexDirection: "column" }}>
+                        <View style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <View style={styles.circle}></View>
+                            <ImageBackground source={require('../assets/beirut.png')} style={styles.imageBackground} />
+                        </View>
+                        <Text style={styles.TodayText}>What do you feel like today?</Text>
                     </View>
-                    <Text style={styles.TodayText}>What do you feel like today?</Text>
+                )}
+                <View style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: 20, bottom: "10%", height: 650}}>
+                    <ScrollView ref={ref => { this.scrollView = ref }}
+                        onContentSizeChange={() => this.scrollView.scrollToEnd({ animated: true })}>
+                    {messagesSent.map((msg, index) => (
+                        msg && msg.text && msg.type ? (
+                            <Text key={index} style={msg.type === 'user' ? styles.userMessage : styles.beirutMessage}>{msg.text}</Text>
+                        ) : null
+                    ))}
+                    </ScrollView>
                 </View>
-                {/* Render received messages */}
-                {messages.map((message, index) => (
-                    <View key={index} style={{ alignSelf: message.sender === 'user' ? 'flex-end' : 'flex-start', margin: 10 }}>
-                        <Text style={{ color: '#fff' }}>{message.text}</Text>
+                <View style={{ position: 'absolute', bottom: 10, left: 40, right: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1, width: '80%', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                    <View style={{ flex: 1 }}>
+                        <TextInput style={styles.inputText} onChangeText={onChangeTextMessage} placeholderTextColor="#fff" placeholder='Message Beirut...' value={message} />
                     </View>
-                ))}
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 20, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, bottom: "5%" }}>
-                    <View style={{ display: "flex" }}>
-                        <TextInput style={styles.inputText} onChangeText={setText} placeholderTextColor="#fff" placeholder='Message Beirut...' value={text} />
-                    </View>
-                    <View style={{ display: "flex" }}>
-                        <TouchableOpacity onPress={sendMessage}>
-                            <ImageBackground source={require('../assets/send.png')} style={{ width: 20, height: 20 }} />
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity onPress={sendMessage}>
+                        <ImageBackground source={require('../assets/send.png')} style={{ width: 20, height: 20 }} />
+                    </TouchableOpacity>
                 </View>
             </View>
         </KeyboardAvoidingView>
@@ -103,5 +130,29 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         fontSize: 18,
         lineHeight: 24,
+    },
+    userMessage: {
+        color: "#fff",
+        fontFamily: "Hanken Grotesk",
+        fontStyle: "normal",
+        fontWeight: "500",
+        fontSize: 18,
+        lineHeight: 24,
+        marginBottom: 10,
+        alignSelf: "flex-end",
+        padding: 10,
+        backgroundColor: "#8B2635",
+    },
+    beirutMessage: {
+        color: "#fff",
+        fontFamily: "Hanken Grotesk",
+        fontStyle: "normal",
+        fontWeight: "500",
+        fontSize: 18,
+        lineHeight: 24,
+        marginBottom: 10,
+        alignSelf: "flex-start",
+        padding: 10,
+        backgroundColor: "#508CA4",
     }
 })

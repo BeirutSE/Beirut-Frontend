@@ -1,14 +1,20 @@
-import { View, Text, ImageBackground, StyleSheet, StatusBar } from 'react-native';
-import { Link } from 'expo-router'
+import { View, Text, ImageBackground, StyleSheet, StatusBar, Pressable } from 'react-native';
+import { Link, useNavigation } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Main() {
     const [username, setUsername] = useState('');
+    const [tag, setTag] = useState('');
+    const navigation = useNavigation();
 
-    useEffect(() => {
-        retrieveUsername(); // Fetch username when component mounts
-    }, []);
+    const saveTag = async (tag) => {
+        try {
+            await AsyncStorage.setItem('tag', tag)
+        } catch (error) {
+            console.error("Failed to save tag:", tag, "due to error:", error)
+        }
+    }
 
     const retrieveUsername = async () => {
         try {
@@ -21,17 +27,21 @@ export default function Main() {
         }
     }
 
-    const navigateToRestaurant = (restaurantType) => {
-        console.log("Navigating to restaurant:", restaurantType);
-    };
+    useEffect(() => {
+        retrieveUsername();
+        saveTag(tag).then(() => {
+            if (tag != '') {
+                navigation.navigate('restaurants');
+            }
+        });
+    }, [tag]);
 
     return (
         <View style={{ backgroundColor: "#000", flex: 1 }}>
             <StatusBar barStyle="light-content" />
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 }}>
                 <View style={{ display: "flex", flexDirection: "row", paddingBottom: 20, paddingRight: 20, justifyContent: "flex-start" }}>
-                    <View style={styles.icon}>
-                    </View>
+                    <View style={styles.icon} />
                     <Text style={styles.helloText}>Hello {username}!</Text>
                 </View>
                 <View style={styles.bellContainer}>
@@ -58,59 +68,73 @@ export default function Main() {
                 <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1, top: "10%" }}>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 }}>
                         <Text style={{ color: "#fff", fontWeight: 500, fontSize: 20, paddingBottom: 10 }}>Restaurants</Text>
-                        <Text style={{ color: "#fff", paddingBottom: 5 }}>View All</Text>
+                        <Pressable onPress={() => {
+                            setTag('')
+                        }}>
+                            <Text style={{ color: "#fff", paddingBottom: 5 }}>View All</Text>
+                        </Pressable>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <Link href={`/restaurants`}>
+                        <Pressable onPress={() => {
+                            setTag('italian')
+                        }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/pizza.png')} style={{ width: 75, height: 75 }} />
                                 </View>
                                 <Text style={styles.iconText}>Italian</Text>
                             </View>
-                        </Link>
-                        <Link href={`/restaurants`}>
+                        </Pressable>
+                        <Pressable onPress={() => {
+                            setTag('asian');
+                        }}>
                             <View style={{ flexDirection: "column" }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/noodles.png')} style={{ width: 60, height: 60 }} />
                                 </View>
                                 <Text style={styles.iconText}>Asian</Text>
                             </View>
-                        </Link>
-                        <Link href={`/restaurants`}>
+                        </Pressable>
+                        <Pressable onPress={() => {
+                            setTag('mexican');
+                        }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/mexican-hat.png')} style={{ width: 60, height: 60 }} />
                                 </View>
                                 <Text style={styles.iconText}>Mexican</Text>
                             </View>
-                        </Link>
+                        </Pressable>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <Link href={`/restaurants`}>
+                        <Pressable onPress={() => {
+                            setTag('lebanese');
+                        }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/lebanese 1.png')} style={{ width: 60, height: 60 }} />
                                 </View>
                                 <Text style={styles.iconText}>Lebanese</Text>
                             </View>
-                        </Link>
-                        <Link href={`/restaurants`}>
+                        </Pressable>
+                        <Pressable onPress={() => {
+                            setTag('american');
+                        }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/burger 1.png')} style={{ width: 50, height: 50 }} />
                                 </View>
                                 <Text style={styles.iconText}>American</Text>
                             </View>
-                        </Link>
-                        <Link href={`/restaurants`}>
+                        </Pressable>
+                        <Pressable>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
                                     <ImageBackground source={require('../assets/icons/cupcake 1.png')} style={{ width: 60, height: 60 }} />
                                 </View>
                                 <Text style={styles.iconText}>Dessert</Text>
                             </View>
-                        </Link>
+                        </Pressable>
                     </View>
                 </View>
             </View>

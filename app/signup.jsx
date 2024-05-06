@@ -1,5 +1,5 @@
 import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
 import React from 'react'
 
 export default function login() {
@@ -9,6 +9,7 @@ export default function login() {
     const [email, setEmail] = React.useState('')
     const [gender, setGender] = React.useState('')
     const [phoneNumber, setPhoneNumber] = React.useState('')
+    const navigation = useNavigation()
 
     const onChangeTextUsername = (text) => {
         setUsername(text)
@@ -56,7 +57,8 @@ export default function login() {
 
             if (response.ok) {
                 console.log("Successfully signed up with username:", username);
-                router.push('/login')
+                navigation.navigate('/login')
+
             } else {
                 console.error("Failed to sign up with username:", username);
             }
