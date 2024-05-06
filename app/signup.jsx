@@ -1,8 +1,8 @@
-import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Keyboard } from 'react-native';
 import { Link, useNavigation } from 'expo-router';
 import React from 'react'
 
-export default function login() {
+export default function signup() {
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [confirmPassword, setConfirmPassword] = React.useState('')
@@ -45,7 +45,7 @@ export default function login() {
         };
 
         try {
-            const response = await fetch('https://10.21.131.94:3002/registerUser', {
+            const response = await fetch('https://yourbeirut.tech:3002/registerUser', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export default function login() {
 
             if (response.ok) {
                 console.log("Successfully signed up with username:", username);
-                navigation.navigate('/login')
+                navigation.navigate('login')
 
             } else {
                 console.error("Failed to sign up with username:", username);
@@ -69,42 +69,49 @@ export default function login() {
     }
 
     return (
-        <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
-            <View style={{ display: "flex", justifyContent: "center", alignItems: "center", top: 10 }}>
-                <View style={styles.circle}></View>
-                <ImageBackground source={require('../assets/beirut.png')} style={styles.imageBackground} />
-            </View>
-            <View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 10 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeTextEmail} placeholderTextColor="#fff" placeholder='Email' />
+        <>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 200 : 'height'} style={{ backgroundColor: "#000", flex: 1 }} >
+                <StatusBar barStyle="light-content" />
+                <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
+                    <View style={{ display: "flex", justifyContent: "center", alignItems: "center", top: 10 }}>
+                        <View style={styles.circle}></View>
+                        <ImageBackground source={require('../assets/beirut.png')} style={styles.imageBackground} />
+                    </View>
+                    <ScrollView>
+                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 10, justifyContent: "space-between", width: 300, left: 50, top: 30 }}>
+                            <TextInput style={styles.inputText} onChangeText={onChangeTextEmail} placeholderTextColor="#fff" placeholder='Email' />
+                        </View>
+                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 10, justifyContent: "space-between", width: 300, left: 50, top: 50 }}>
+                            <TextInput style={styles.inputText} onChangeText={onChangeTextUsername} placeholderTextColor="#fff" placeholder='Username' />
+                        </View>
+                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 10, justifyContent: "space-between", width: 300, left: 50, top: 70 }}>
+                            <TextInput style={styles.inputText} onChangeText={onChangeTextPassword} placeholderTextColor="#fff" placeholder='Password' secureTextEntry={true} />
+                        </View>
+                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 10, justifyContent: "space-between", width: 300, left: 50, top: 90 }}>
+                            <TextInput style={styles.inputText} onChangeText={onChangeTextConfirmPassword} placeholderTextColor="#fff" placeholder='Confirm Password' secureTextEntry={true} />
+                        </View>
+                        <Pressable style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 10, justifyContent: "space-between", width: 300, left: 50, top: 110 }}>
+                            <TextInput style={styles.inputText} onChangeText={onChangeTextPhoneNumber} placeholderTextColor="#fff" placeholder='Phone Number' />
+                        </Pressable>
+                    </ScrollView>
+                    <View style={{ display: 'flex', bottom: 140 }}>
+                        <Pressable style={styles.enterButton} onPress={signUp}>
+                            <Text style={styles.text}>Sign Up</Text>
+                        </Pressable>
+                        <Pressable style={styles.account}>
+                            <Link href="/login">
+                                <Text style={styles.accountText}>Already have an account?</Text>
+                            </Link>
+                        </Pressable>
+                    </View>
                 </View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 30 }}>
-                    <TextInput stbyle={styles.inputText} onChangeText={onChangeTextUsername} placeholderTextColor="#fff" placeholder='Username' />
-                </View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 50 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeTextPassword} placeholderTextColor="#fff" placeholder='Password' />
-                </View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 70 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeTextConfirmPassword} placeholderTextColor="#fff" placeholder='Confirm Password' />
-                </View>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", borderRadius: 10, borderColor: 'white', borderWidth: 1, padding: 20, justifyContent: "space-between", width: 300, left: 50, top: 90 }}>
-                    <TextInput style={styles.inputText} onChangeText={onChangeTextPhoneNumber} placeholderTextColor="#fff" placeholder='Phone Number' />
-                </View>
-            </View>
-            <Pressable style={styles.enterButton}>
-                <Text style={styles.text}>Sign Up</Text>
-            </Pressable>
-            <View>
-                <Link href="/login" style={styles.account}>
-                    <Text style={styles.accountText}>Already have an account?</Text>
-                </Link>
-            </View>
+            </KeyboardAvoidingView >
             <ImageBackground
                 source={require('../assets/wave.png')}
                 style={styles.wave}
                 resizeMode="cover"
             ></ImageBackground>
-        </View>
+        </>
     );
 }
 
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     account: {
-        top: 80,
+        top: 120,
         alignSelf: "center"
     },
     accountText: {

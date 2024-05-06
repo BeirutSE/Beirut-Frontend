@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable, StatusBar } from 'react-native';
 import { Link } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import React, { useEffect } from 'react'
@@ -59,6 +59,7 @@ export default function login() {
     }
     return (
         <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
+            <StatusBar barStyle="light-content" />
             <View style={{ display: "flex", justifyContent: "center", alignItems: "center", top: 100 }}>
                 <View style={styles.circle}></View>
                 <ImageBackground source={require('../assets/beirut.png')} style={styles.imageBackground} />
@@ -72,7 +73,7 @@ export default function login() {
                 </View>
             </View>
             <Pressable style={styles.enterButton} onPress={loginMain}>
-                    <Text style={styles.text}>Login</Text>
+                <Text style={styles.text}>Login</Text>
             </Pressable>
             <View>
                 <Link href="/signup" style={styles.account}>

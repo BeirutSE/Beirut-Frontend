@@ -13,19 +13,32 @@ export default function Restaurants() {
     const [modalVisible, setModalVisible] = useState(false);
     const { width } = useWindowDimensions();
     const [sortOption, setSortOption] = useState('none');
+    const [filterArea, setFilterArea] = useState('all');
 
     const handleRestaurantPress = (restaurant) => {
         setSelectedRestaurant(restaurant);
         setModalVisible(true);
     };
 
+    const filterRestaurants = (restaurants) => {
+        let filteredRestaurants = [...restaurants];
+
+        if (filterArea !== 'all') {
+            filteredRestaurants = filteredRestaurants.filter(restaurant =>
+                restaurant.address.includes(filterArea)
+            );
+        }
+
+        return filteredRestaurants;
+    };
     const getDefaultImage = () => {
         return require('../assets/beirut.png');
     };
 
     const sortRestaurants = (restaurants) => {
+        if (!restaurants) return [];
         if (sortOption === 'none') {
-            return restaurants;
+            return restaurants.sort((a, b) => a.restaurantName.localeCompare(b.restaurantName));
         } else if (sortOption === 'openingTime') {
             return restaurants.sort((a, b) => {
                 const aTime = a.openingTime.split(':');
@@ -77,11 +90,11 @@ export default function Restaurants() {
                     <Text style={styles.Beirut}>Beirut</Text>
                 </View>
             </Link>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20 }}>
-                <Text style={{ color: 'white', fontSize: 18 }}>Sort by:</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingBottom: 10 }}>
+                <Text style={{ color: 'white', fontSize: 20 }}>Sort by:</Text>
                 <Picker
                     selectedValue={sortOption}
-                    style={{ width: 140, color: 'white', backgroundColor: '#8B2635'}}
+                    style={{ width: 140, color: 'white', backgroundColor: '#8B2635' }}
                     itemStyle={{ color: 'white', fontSize: 10, height: 40 }}
                     onValueChange={(itemValue) => setSortOption(itemValue)}
                 >
@@ -90,8 +103,23 @@ export default function Restaurants() {
                     <Picker.Item label="Capacity" value="capacity" />
                 </Picker>
             </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingBottom: 10 }}>
+                <Text style={{ color: 'white', fontSize: 18 }}>Filter by area:</Text>
+                <Picker
+                    selectedValue={filterArea}
+                    style={{ width: 140, color: 'white', backgroundColor: '#8B2635' }}
+                    itemStyle={{ color: 'white', fontSize: 10, height: 40 }}
+                    onValueChange={(itemValue) => setFilterArea(itemValue)}
+                >
+                    <Picker.Item label="All" value="all" />
+                    <Picker.Item label="Hamra" value="Hamra" />
+                    <Picker.Item label="Ashrafieh" value="Ashrafieh" />
+                    <Picker.Item label="Jbeil" value="Jbeil" />
+                    <Picker.Item label="Jounieh" value="Jounieh" />
+                </Picker>
+            </View>
             <ScrollView>
-                {sortRestaurants(restaurants).map((restaurant, index) => (
+                {sortRestaurants(filterRestaurants(restaurants)).map((restaurant, index) => (
                     <TouchableOpacity key={index} onPress={() => handleRestaurantPress(restaurant)}>
                         <View style={styles.restaurantContainer}>
                             <View style={styles.imageContainer}>
@@ -101,7 +129,7 @@ export default function Restaurants() {
                                         style={styles.restaurantImage}
                                     />
                                 ) : (
-                                    <ImageBackground source={getDefaultImage()} style={styles.restaurantImage} />
+                                    <ImageBackground source={getDefaultImage()} style={styles.beirutImage} />
                                 )}
                             </View>
                             <View style={styles.nameContainer}>
@@ -120,8 +148,8 @@ export default function Restaurants() {
             >
                 <View style={{ flex: 1, backgroundColor: '#000', justifyContent: 'center', alignItems: 'center' }}>
                     <View style={{ backgroundColor: '#fff', borderRadius: 10, padding: 20, alignItems: 'center', justifyContent: 'center', position: 'absolute' }}>
-                        <Text style={{ color: "#8B2635", fontWeight: 'bold', marginBottom: 10}}>Swipe to See More!</Text>
-                        <Carousel 
+                        <Text style={{ color: "#8B2635", fontWeight: 'bold', marginBottom: 10 }}>Swipe to See More!</Text>
+                        <Carousel
                             width={width}
                             height={width / 2}
                             data={selectedRestaurant && JSON.parse(selectedRestaurant.imageLinks)}
@@ -129,7 +157,7 @@ export default function Restaurants() {
                                 <ImageBackground source={{ uri: item }} style={{ width: width, height: width / 2, padding: 20 }} />
                             )}
                         />
-                        <Text style={{ fontSize: 30, fontWeight: 'bold', marginTop: 30}}>{selectedRestaurant && selectedRestaurant.restaurantName}</Text>
+                        <Text style={{ fontSize: 30, fontWeight: 'bold', marginTop: 30 }}>{selectedRestaurant && selectedRestaurant.restaurantName}</Text>
                         <Text style={{ marginTop: 10 }}>Opening Time: {selectedRestaurant && selectedRestaurant.openingTime}</Text>
                         <Text>Closing Time: {selectedRestaurant && selectedRestaurant.closingTime}</Text>
                         <Text>Address: {selectedRestaurant && selectedRestaurant.address}</Text>
@@ -177,6 +205,11 @@ const styles = StyleSheet.create({
     },
     restaurantImage: {
         width: '100%',
+        height: 200,
+    },
+    beirutImage: {
+        width: '60%',
+        left: 115,
         height: 200,
     },
     restaurantName: {

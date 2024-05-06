@@ -40,10 +40,10 @@ export default function Main() {
         <View style={{ backgroundColor: "#000", flex: 1 }}>
             <StatusBar barStyle="light-content" />
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 }}>
-                <View style={{ display: "flex", flexDirection: "row", paddingBottom: 20, paddingRight: 20, justifyContent: "flex-start" }}>
+                <Pressable style={{ display: "flex", flexDirection: "row", paddingBottom: 20, paddingRight: 20, justifyContent: "flex-start" }} onPress={() => navigation.navigate('profile')}>
                     <View style={styles.icon} />
                     <Text style={styles.helloText}>Hello {username}!</Text>
-                </View>
+                </Pressable>
                 <View style={styles.bellContainer}>
                     <ImageBackground source={require('../assets/bell.png')} style={{ width: 20, height: 20 }} />
                 </View>

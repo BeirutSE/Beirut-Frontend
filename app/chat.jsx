@@ -15,8 +15,6 @@ export default function Chat() {
         setIsMessageSent(true)
     }
 
-    
-
     const sendMessage = async () => {
         try {
             const response = await fetch('https://yourbeirut.tech:3002/sendMessage', {
