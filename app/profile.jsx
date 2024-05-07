@@ -1,7 +1,7 @@
 import { Text, View, StatusBar, StyleSheet, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Link } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
 import { ImageBackground } from 'react-native';
 import CheckBox from 'expo-checkbox';
 
@@ -15,6 +15,7 @@ export default function Profile() {
     const [toggleHalalCheckBox, setToggleHalalCheckBox] = useState(false);
     const [toggleIndoorCheckBox, setToggleIndoorCheckBox] = useState(false);
     const [toggleOutdoorCheckBox, setToggleOutdoorCheckBox] = useState(false);
+    const navigation = useNavigation();
 
     const retrieveUsername = async () => {
         try {
@@ -57,6 +58,7 @@ export default function Profile() {
 
             if (response.ok) {
                 console.log("Preferences added for username:", username);
+                navigation.navigate('main');
             } else {
 
             }
