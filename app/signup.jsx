@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Keyboard } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, SafeAreaView, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Keyboard, StatusBar } from 'react-native';
 import { Link, useNavigation } from 'expo-router';
 import React from 'react'
 
