@@ -68,11 +68,6 @@ export default function Main() {
                 <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1, top: "10%" }}>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 }}>
                         <Text style={{ color: "#fff", fontWeight: 500, fontSize: 20, paddingBottom: 10 }}>Restaurants</Text>
-                        <Pressable onPress={() => {
-                            setTag('')
-                        }}>
-                            <Text style={{ color: "#fff", paddingBottom: 5 }}>View All</Text>
-                        </Pressable>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <Pressable onPress={() => {

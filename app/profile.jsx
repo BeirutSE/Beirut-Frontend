@@ -76,7 +76,7 @@ export default function Profile() {
             </Link>
             <View style={{ display: "flex", flexDirection: "row", left: 250, top: -40 }}>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
-                    <Text style={styles.helloText}>Hello {username}!</Text>
+                    <Text style={styles.helloText}>{username}</Text>
                     <View style={styles.icon} />
                 </View>
             </View>
@@ -170,12 +170,13 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         color: "#fff",
         paddingTop: 15,
-        paddingRight: 15,
+        paddingRight: 20,
     },
     icon: {
         width: 50,
         height: 50,
         borderRadius: 100,
+        right: 10,
         backgroundColor: '#FFF',
         justifyContent: 'center',
         alignItems: 'center',

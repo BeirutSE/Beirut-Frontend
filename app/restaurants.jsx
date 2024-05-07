@@ -161,6 +161,7 @@ export default function Restaurants() {
                         <Text style={{ marginTop: 10 }}>Opening Time: {selectedRestaurant && selectedRestaurant.openingTime}</Text>
                         <Text>Closing Time: {selectedRestaurant && selectedRestaurant.closingTime}</Text>
                         <Text>Address: {selectedRestaurant && selectedRestaurant.address}</Text>
+                        <Text>Capacity: {selectedRestaurant && selectedRestaurant.capacity}</Text>
                         <TouchableOpacity onPress={() => setModalVisible(false)}>
                             <Text style={{ color: '#8B2635', marginTop: 20 }}>Close</Text>
                         </TouchableOpacity>
