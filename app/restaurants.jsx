@@ -90,7 +90,7 @@ export default function Restaurants() {
                     <Text style={styles.Beirut}>Beirut</Text>
                 </View>
             </Link>
-           <Text style={{ color: 'white', fontSize: 30, textAlign: 'center', top: -40, left: 140}}>{tag}</Text>
+           <Text style={{ color: 'white', fontSize: 30, textAlign: 'center', top: -38, left: 120}}>{tag}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingBottom: 10 }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>Sort by:</Text>
                 <Picker
