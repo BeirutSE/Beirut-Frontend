@@ -31,8 +31,10 @@ The backend is started separately.
 
 ## Visuals
 
-![IMG_8312](https://github.com/riwaht/Beirut-Frontend/assets/81487756/31b14836-d582-46a6-8275-aa888cc55dc2)
-![IMG_8313](https://github.com/riwaht/Beirut-Frontend/assets/81487756/9018ea94-f6aa-4cbd-9554-535680cc390e)
+<div style="display: flex;">
+    <img src="https://github.com/riwaht/Beirut-Frontend/assets/81487756/31b14836-d582-46a6-8275-aa888cc55dc2" alt="IMG_8312" style="width: 30%; margin-right: 5px;">
+    <img src="https://github.com/riwaht/Beirut-Frontend/assets/81487756/9018ea94-f6aa-4cbd-9554-535680cc390e" alt="IMG_8313" style="width: 30%; margin-left: 5px;">
+</div>
 
 ## Roadmap
 
