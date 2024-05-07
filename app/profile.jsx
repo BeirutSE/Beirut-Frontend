@@ -159,6 +159,9 @@ export default function Profile() {
                     </Pressable>
                 </View>
             </View>
+            <Pressable style={styles.logOutButton} onPress={() => navigation.navigate('index')}>
+                <Text style={styles.text}>Logout</Text>
+            </Pressable>
         </View>
     );
 }
@@ -200,6 +203,17 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         width: 100,
+        alignItems: "center",
+        alignSelf: "center",
+    },
+    logOutButton: {
+        color: "#fff",
+        backgroundColor: "#8B2635",
+        borderColor: "#fff",
+        borderWidth: 1,
+        borderRadius: 10,
+        width: 120,
+        bottom: -120,
         alignItems: "center",
         alignSelf: "center",
     },
