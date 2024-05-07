@@ -71,7 +71,7 @@ export default function Main() {
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <Pressable onPress={() => {
-                            setTag('italian')
+                            setTag('Italian')
                         }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
@@ -81,7 +81,7 @@ export default function Main() {
                             </View>
                         </Pressable>
                         <Pressable onPress={() => {
-                            setTag('asian');
+                            setTag('Asian');
                         }}>
                             <View style={{ flexDirection: "column" }}>
                                 <View style={styles.restaurantIcon}>
@@ -91,7 +91,7 @@ export default function Main() {
                             </View>
                         </Pressable>
                         <Pressable onPress={() => {
-                            setTag('mexican');
+                            setTag('Mexican');
                         }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
@@ -103,7 +103,7 @@ export default function Main() {
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <Pressable onPress={() => {
-                            setTag('lebanese');
+                            setTag('Lebanese');
                         }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
@@ -113,7 +113,7 @@ export default function Main() {
                             </View>
                         </Pressable>
                         <Pressable onPress={() => {
-                            setTag('american');
+                            setTag('American');
                         }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
@@ -122,12 +122,14 @@ export default function Main() {
                                 <Text style={styles.iconText}>American</Text>
                             </View>
                         </Pressable>
-                        <Pressable>
+                        <Pressable onPress={() => {
+                            setTag('Seafood');
+                        }}>
                             <View style={{ flexDirection: "column", padding: 5 }}>
                                 <View style={styles.restaurantIcon}>
-                                    <ImageBackground source={require('../assets/icons/cupcake 1.png')} style={{ width: 60, height: 60 }} />
+                                    <ImageBackground source={require('../assets/icons/fish.png')} style={{ width: 60, height: 35 }} />
                                 </View>
-                                <Text style={styles.iconText}>Dessert</Text>
+                                <Text style={styles.iconText}>Seafood</Text>
                             </View>
                         </Pressable>
                     </View>
