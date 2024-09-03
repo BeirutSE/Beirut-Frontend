@@ -46,7 +46,7 @@ Future works include:
 
 ## License
 
-Copyright (c) 2024 Riwa Hoteit
+Copyright (c) 2024 Beirut
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
