@@ -38,7 +38,7 @@ export default function Index() {
                     >
                     </ImageBackground>
                 </View>
-                <Link href="/login" style={styles.continue}>Tap to Continue</Link>
+                <Link href="/chat" style={styles.continue}>Tap to Continue</Link>
                 <ImageBackground
                     source={require('../assets/wave.png')}
                     style={styles.wave}

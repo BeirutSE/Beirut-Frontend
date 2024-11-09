@@ -49,7 +49,7 @@ export default function login() {
 
             if (response.ok) {
                 console.log("Successfully logged in with username:", username);
-                navigation.navigate('main')
+                navigation.navigate('chat')
             } else {
                 console.error("Failed to login with username:", username);
             }

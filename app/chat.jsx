@@ -1,19 +1,90 @@
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, StatusBar, Pressable, ScrollView, Keyboard } from 'react-native'
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, TextInput, KeyboardAvoidingView, Platform, StatusBar, Pressable, ScrollView, Keyboard, Animated } from 'react-native'
 import React, { useState, useEffect, useRef } from "react"
 import { Link } from 'expo-router'
+import { Audio } from 'expo-av'
 
 export default function Chat() {
     const ScrollViewRef = useRef(null);
-    const [chatTag, setChatTag] = useState('')
-    const [message, setMessage] = useState('')
-    const [aiMessage, setAiMessage] = useState('')
-    const [isMessageSent, setIsMessageSent] = useState(false)
-    const [messagesSent, setMessagesSent] = useState([])
+    const [chatTag, setChatTag] = useState('');
+    const [message, setMessage] = useState('');
+    const [aiMessage, setAiMessage] = useState('');
+    const [isMessageSent, setIsMessageSent] = useState(false);
+    const [hasTyped, setHasTyped] = useState(false);
+    const [messagesSent, setMessagesSent] = useState([]);
+    const [recording, setRecording] = useState(null);
+    const [permissionResponse, requestPermission] = Audio.usePermissions();
+    const micSize = useRef(new Animated.Value(40)).current; // Default size of mic button
+
+    // Function to animate mic button growth
+    const animateMicPressIn = () => {
+        Animated.spring(micSize, {
+            toValue: 60,  // Increase size when long-pressed
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const animateMicPressOut = () => {
+        Animated.spring(micSize, {
+            toValue: 40,  // Reset size when released
+            useNativeDriver: false,
+        }).start();
+    };
+
+    // Start recording when long press starts
+    const startRecording = async () => {
+        try {
+            if (permissionResponse?.status !== 'granted') {
+                console.log('Requesting permission..');
+                await requestPermission();
+            }
+            await Audio.setAudioModeAsync({
+                allowsRecordingIOS: true,
+                playsInSilentModeIOS: true,
+            });
+
+            console.log('Starting recording..');
+            const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+            setRecording(recording);
+            console.log('Recording started');
+        } catch (err) {
+            console.error('Failed to start recording', err);
+        }
+    };
+
+    // Stop recording when long press ends
+    const stopRecording = async () => {
+        console.log('Stopping recording..');
+        setRecording(null);
+        await recording.stopAndUnloadAsync();
+        await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+        const uri = recording.getURI();
+        console.log('Recording stopped and stored at', uri);
+    };
 
     const onChangeTextMessage = (text) => {
-        setMessage(text)
-        setIsMessageSent(true)
-    }
+        setMessage(text);
+
+        if (text.length > 0) {
+            setHasTyped(true);
+            setIsMessageSent(false); // Ensure the prompt only hides if a message is truly sent
+        } else {
+            // Reset states when text is deleted
+            setHasTyped(false);
+            setIsMessageSent(false);
+        }
+    };
+
+    const handleSendOrRecord = () => {
+        if (message) {
+            sendMessage();
+        } else {
+            if (recording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+    };
 
     const sendMessage = async () => {
         try {
@@ -32,15 +103,15 @@ export default function Chat() {
             if (response.ok) {
                 const receivedMessage = data.response;
                 setAiMessage(receivedMessage);
-                console.log('Message sent:', message);
-                console.log('Message received:', receivedMessage);
-                setMessagesSent([...messagesSent, , { text: message, type: 'user' }, { text: receivedMessage, type: 'ai' }]);
+                setMessagesSent([...messagesSent, { text: message, type: 'user' }, { text: receivedMessage, type: 'ai' }]);
                 setMessage('');
+                setIsMessageSent(true);
+                setHasTyped(false); // Reset hasTyped on message send
                 Keyboard.dismiss();
             } else {
                 console.error('Failed to send message:', message);
             }
-        } catch (error) {yy
+        } catch (error) {
             console.error('Error sending message:', error);
         }
     };
@@ -51,11 +122,10 @@ export default function Chat() {
             <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
                 <Link href="/main">
                     <View style={{ display: "flex", flexDirection: "row" }}>
-                        <ImageBackground source={require('../assets/arrow.png')} style={{ width: 20, height: 20, top: "9%", left: "2%" }} />
                         <Text style={styles.Beirut}>Beirut</Text>
                     </View>
                 </Link>
-                {!isMessageSent && (
+                {(!isMessageSent && !hasTyped) && (
                     <View style={{ display: "flex", flexDirection: "column" }}>
                         <View style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                             <View style={styles.circle}></View>
@@ -64,27 +134,52 @@ export default function Chat() {
                         <Text style={styles.TodayText}>What do you feel like today?</Text>
                     </View>
                 )}
-                <View style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: 20, bottom: "10%", height: 650}}>
-                    <ScrollView ref={ref => { this.scrollView = ref }}
-                        onContentSizeChange={() => this.scrollView.scrollToEnd({ animated: true })}>
-                    {messagesSent.map((msg, index) => (
-                        msg && msg.text && msg.type ? (
-                            <Text key={index} style={msg.type === 'user' ? styles.userMessage : styles.beirutMessage}>{msg.text}</Text>
-                        ) : null
-                    ))}
+                <View style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: 20, bottom: "10%", height: 650 }}>
+                    <ScrollView ref={ref => { this.scrollView = ref }} onContentSizeChange={() => this.scrollView.scrollToEnd({ animated: true })}>
+                        {messagesSent.map((msg, index) => (
+                            msg && msg.text && msg.type ? (
+                                <Text key={index} style={msg.type === 'user' ? styles.userMessage : styles.beirutMessage}>{msg.text}</Text>
+                            ) : null
+                        ))}
                     </ScrollView>
                 </View>
-                <View style={{ position: 'absolute', bottom: 10, left: 40, right: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1, width: '80%', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                    <View style={{ flex: 1 }}>
-                        <TextInput style={styles.inputText} onChangeText={onChangeTextMessage} placeholderTextColor="#fff" placeholder='Message Beirut...' value={message} />
+                <View style={{ position: 'absolute', bottom: 10, left: 40, right: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 15, borderRadius: 20, borderColor: '#8B2635', borderWidth: 3, width: '80%', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <TextInput
+                            style={styles.inputText}
+                            onChangeText={onChangeTextMessage}
+                            placeholderTextColor="#fff"
+                            placeholder='Message Beirut...'
+                            value={message}
+                        />
                     </View>
-                    <TouchableOpacity onPress={sendMessage}>
-                        <ImageBackground source={require('../assets/send.png')} style={{ width: 20, height: 20 }} />
+                    <TouchableOpacity
+                        onPress={handleSendOrRecord}
+                        onLongPress={message ? null : startRecording} // Disable long press if there is text
+                        onPressOut={message ? null : stopRecording} // Disable long press out if there is text
+                    >
+                        <Animated.View style={{
+                            width: micSize,
+                            height: micSize,
+                            borderRadius: micSize,
+                            backgroundColor: '#8B2635',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <ImageBackground
+                                source={message ? require('../assets/send.png') : require('../assets/microphone.png')}
+                                style={{
+                                    width: message ? 20 : 13,
+                                    height: 20,
+                                    left: message ? -1 : 0,
+                                }}
+                            />
+                        </Animated.View>
                     </TouchableOpacity>
                 </View>
             </View>
         </KeyboardAvoidingView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -126,7 +221,7 @@ const styles = StyleSheet.create({
         fontFamily: "Hanken Grotesk",
         fontStyle: "normal",
         fontWeight: "500",
-        fontSize: 18,
+        fontSize: 20,
         lineHeight: 24,
     },
     userMessage: {
@@ -134,23 +229,18 @@ const styles = StyleSheet.create({
         fontFamily: "Hanken Grotesk",
         fontStyle: "normal",
         fontWeight: "500",
-        fontSize: 18,
+        fontSize: 20,
         lineHeight: 24,
-        marginBottom: 10,
         alignSelf: "flex-end",
-        padding: 10,
-        backgroundColor: "#8B2635",
+        marginBottom: 10,
     },
     beirutMessage: {
         color: "#fff",
         fontFamily: "Hanken Grotesk",
         fontStyle: "normal",
         fontWeight: "500",
-        fontSize: 18,
+        fontSize: 20,
         lineHeight: 24,
         marginBottom: 10,
-        alignSelf: "flex-start",
-        padding: 10,
-        backgroundColor: "#508CA4",
-    }
-})
+    },
+});
