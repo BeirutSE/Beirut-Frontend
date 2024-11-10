@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, TextInput, K
 import React, { useState, useEffect, useRef } from "react"
 import { Link } from 'expo-router'
 import { Audio } from 'expo-av'
+import AudioPlayer from './Components/AudioPlayer.jsx'
 
 export default function Chat() {
     const ScrollViewRef = useRef(null);
@@ -14,6 +15,21 @@ export default function Chat() {
     const [recording, setRecording] = useState(null);
     const [permissionResponse, requestPermission] = Audio.usePermissions();
     const micSize = useRef(new Animated.Value(40)).current; // Default size of mic button
+    const [audioUri, setAudioUri] = useState(null);
+    const [decibelLevels, setDecibelLevels] = useState([]);
+
+    const onChangeTextMessage = (text) => {
+        setMessage(text);
+
+        if (text.length > 0) {
+            setHasTyped(true);
+            setIsMessageSent(false); // Ensure the prompt only hides if a message is truly sent
+        } else {
+            // Reset states when text is deleted
+            setHasTyped(false);
+            setIsMessageSent(false);
+        }
+    };
 
     // Function to animate mic button growth
     const animateMicPressIn = () => {
@@ -30,11 +46,10 @@ export default function Chat() {
         }).start();
     };
 
-    // Start recording when long press starts
-    const startRecording = async () => {
+    async function startRecording() {
         try {
+            // Request permissions and set up recording
             if (permissionResponse?.status !== 'granted') {
-                console.log('Requesting permission..');
                 await requestPermission();
             }
             await Audio.setAudioModeAsync({
@@ -42,37 +57,42 @@ export default function Chat() {
                 playsInSilentModeIOS: true,
             });
 
-            console.log('Starting recording..');
-            const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+            const recording = new Audio.Recording();
+            await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
+
+            // Start collecting decibel levels
+            recording.setOnRecordingStatusUpdate((status) => {
+                if (status.metering && !isNaN(status.metering)) {  // Ensure it's a valid number
+                    setDecibelLevels((prev) => {
+                        const newLevels = [...prev.slice(-20), status.metering];
+                        return newLevels;
+                    });
+                }
+            });
+
+            animateMicPressIn();
+
+            await recording.startAsync();
             setRecording(recording);
-            console.log('Recording started');
         } catch (err) {
             console.error('Failed to start recording', err);
         }
-    };
+    }
 
-    // Stop recording when long press ends
-    const stopRecording = async () => {
-        console.log('Stopping recording..');
-        setRecording(null);
-        await recording.stopAndUnloadAsync();
-        await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
-        const uri = recording.getURI();
-        console.log('Recording stopped and stored at', uri);
-    };
 
-    const onChangeTextMessage = (text) => {
-        setMessage(text);
-
-        if (text.length > 0) {
-            setHasTyped(true);
-            setIsMessageSent(false); // Ensure the prompt only hides if a message is truly sent
-        } else {
-            // Reset states when text is deleted
-            setHasTyped(false);
-            setIsMessageSent(false);
+    async function stopRecording() {
+        try {
+            await recording.stopAndUnloadAsync();
+            const uri = recording.getURI();
+            setAudioUri(uri);  // Save the URI
+            setRecording(null);
+            await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+            animateMicPressOut();
+            sendVoiceNote(uri); // Call sendVoiceNote to send the voice message
+        } catch (error) {
+            console.error('Failed to stop recording', error);
         }
-    };
+    }
 
     const handleSendOrRecord = () => {
         if (message) {
@@ -88,31 +108,67 @@ export default function Chat() {
 
     const sendMessage = async () => {
         try {
-            const response = await fetch('https://yourbeirut.tech:3002/sendMessage', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chatTag: chatTag,
-                    message: message
-                }),
-            });
-            const data = await response.json();
+            // const response = await fetch('https://yourbeirut.tech:3002/sendMessage', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         chatTag: chatTag,
+            //         message: message
+            //     }),
+            // });
+            // const data = await response.json();
+            // simulate the behavior of a fetch call
+            const data = {
+                response: "Message received successfully!"
+            };
 
-            if (response.ok) {
-                const receivedMessage = data.response;
-                setAiMessage(receivedMessage);
-                setMessagesSent([...messagesSent, { text: message, type: 'user' }, { text: receivedMessage, type: 'ai' }]);
-                setMessage('');
-                setIsMessageSent(true);
-                setHasTyped(false); // Reset hasTyped on message send
-                Keyboard.dismiss();
-            } else {
-                console.error('Failed to send message:', message);
-            }
+            // if (response.ok) {
+            const receivedMessage = data.response;
+            setAiMessage(receivedMessage);
+            setMessagesSent([...messagesSent, { text: message, type: 'user' }, { text: receivedMessage, type: 'ai' }]);
+            setMessage('');
+            setIsMessageSent(true);
+            setHasTyped(false); // Reset hasTyped on message send
+            Keyboard.dismiss();
+            // } else {
+            //     console.error('Failed to send message:', message);
+            // }
         } catch (error) {
             console.error('Error sending message:', error);
+        }
+    };
+
+    // Function to send the voice note message
+    const sendVoiceNote = async (uri) => {
+        try {
+            // Save the current decibel levels before resetting
+            const savedDecibelLevels = [...decibelLevels];
+
+            // Simulate server response for testing purposes
+            const simulatedResponse = {
+                response: "Voice note received successfully!"
+            };
+
+            // Display the simulated response in your app's chat
+            const receivedMessage = simulatedResponse.response;
+            setAiMessage(receivedMessage);
+            setIsMessageSent(true);
+
+            // Add the voice note message with URI instead of text
+            setMessagesSent([
+                ...messagesSent,
+                {
+                    uri: uri, type: 'user', isVoiceNote: true,
+                    decibelLevels: [...decibelLevels]
+                }, // Voice note message with URI
+                { text: receivedMessage, type: 'ai' }
+            ]);
+
+            setAudioUri(null);
+            setDecibelLevels([]);  // Reset decibel levels
+
+        } catch (error) {
+            console.error('Error handling voice note:', error);
         }
     };
 
@@ -136,11 +192,21 @@ export default function Chat() {
                 )}
                 <View style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: 20, bottom: "10%", height: 650 }}>
                     <ScrollView ref={ref => { this.scrollView = ref }} onContentSizeChange={() => this.scrollView.scrollToEnd({ animated: true })}>
-                        {messagesSent.map((msg, index) => (
-                            msg && msg.text && msg.type ? (
-                                <Text key={index} style={msg.type === 'user' ? styles.userMessage : styles.beirutMessage}>{msg.text}</Text>
-                            ) : null
-                        ))}
+                        {messagesSent.map((msg, index) => {
+                            return (
+                                msg && msg.type === 'user' && msg.uri ? (
+                                    <AudioPlayer
+                                        key={msg.id}
+                                        uri={msg.uri}
+                                        decibelLevels={msg.decibelLevels || []}
+                                    />
+                                ) : msg && msg.text && msg.type ? (
+                                    <Text key={index} style={msg.type === 'user' ? styles.userMessage : styles.beirutMessage}>
+                                        {msg.text}
+                                    </Text>
+                                ) : null
+                            );
+                        })}
                     </ScrollView>
                 </View>
                 <View style={{ position: 'absolute', bottom: 10, left: 40, right: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 15, borderRadius: 20, borderColor: '#8B2635', borderWidth: 3, width: '80%', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
@@ -155,8 +221,8 @@ export default function Chat() {
                     </View>
                     <TouchableOpacity
                         onPress={handleSendOrRecord}
-                        onLongPress={message ? null : startRecording} // Disable long press if there is text
-                        onPressOut={message ? null : stopRecording} // Disable long press out if there is text
+                        onLongPress={message ? null : startRecording}
+                        onPressOut={message ? null : stopRecording}
                     >
                         <Animated.View style={{
                             width: micSize,
@@ -229,18 +295,23 @@ const styles = StyleSheet.create({
         fontFamily: "Hanken Grotesk",
         fontStyle: "normal",
         fontWeight: "500",
-        fontSize: 20,
+        fontSize: 18,
         lineHeight: 24,
-        alignSelf: "flex-end",
         marginBottom: 10,
+        alignSelf: "flex-end",
+        padding: 10,
+        backgroundColor: "#8B2635",
     },
     beirutMessage: {
         color: "#fff",
         fontFamily: "Hanken Grotesk",
         fontStyle: "normal",
         fontWeight: "500",
-        fontSize: 20,
+        fontSize: 18,
         lineHeight: 24,
         marginBottom: 10,
-    },
+        alignSelf: "flex-start",
+        padding: 10,
+        backgroundColor: "#508CA4",
+    }
 });
