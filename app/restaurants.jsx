@@ -84,7 +84,7 @@ export default function Restaurants() {
     return (
         <View style={{ flex: 1, backgroundColor: '#000' }}>
             <StatusBar barStyle="light-content" />
-            <Link href="/main">
+            <Link href="/chat">
                 <View style={{ display: "flex", flexDirection: "row" }}>
                     <ImageBackground source={require('../assets/arrow.png')} style={{ width: 20, height: 20, top: "9%", left: "2%" }} />
                     <Text style={styles.Beirut}>Beirut</Text>

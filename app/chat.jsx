@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { Link } from 'expo-router'
 import { Audio } from 'expo-av'
 import AudioPlayer from './Components/AudioPlayer.jsx'
+import NavBar from './Components/NavBar';
 
 export default function Chat() {
     const ScrollViewRef = useRef(null);
@@ -17,6 +18,12 @@ export default function Chat() {
     const micSize = useRef(new Animated.Value(40)).current; // Default size of mic button
     const [audioUri, setAudioUri] = useState(null);
     const [decibelLevels, setDecibelLevels] = useState([]);
+    const [isNavBarOpen, setIsNavBarOpen] = useState(false);
+
+    const toggleNavBar = () => {
+        console.log('Toggling nav bar');
+        setIsNavBarOpen(!isNavBarOpen);
+    };
 
     const onChangeTextMessage = (text) => {
         setMessage(text);
@@ -176,11 +183,16 @@ export default function Chat() {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ backgroundColor: "#000", flex: 1 }} >
             <StatusBar barStyle="light-content" />
             <View style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
-                <Link href="/main">
-                    <View style={{ display: "flex", flexDirection: "row" }}>
-                        <Text style={styles.Beirut}>Beirut</Text>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Text style={styles.Beirut}>Beirut</Text>
+                </View>
+                <TouchableOpacity style={styles.hamburgerContainer} onPress={toggleNavBar}>
+                    <View style={styles.redCircle}>
+                        <Text style={styles.hamburgerIcon}>☰</Text>
                     </View>
-                </Link>
+                </TouchableOpacity>
+
+                {isNavBarOpen && <NavBar isOpen={isNavBarOpen} onClose={() => setIsNavBarOpen(false)} />}
                 {(!isMessageSent && !hasTyped) && (
                     <View style={{ display: "flex", flexDirection: "column" }}>
                         <View style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -256,6 +268,25 @@ const styles = StyleSheet.create({
         fontSize: 35,
         color: "#fff",
         paddingLeft: 15
+    },
+    hamburgerContainer: {
+        position: 'absolute',
+        top: 5,
+        right: 20,
+    },
+    redCircle: {
+        backgroundColor: '#8B2635',
+        borderRadius: 30,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    hamburgerIcon: {
+        color: '#fff',
+        fontSize: 24,
+        top: 1,
+        left: 1
     },
     circle: {
         width: 150,

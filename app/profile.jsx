@@ -5,7 +5,6 @@ import { Link, useNavigation } from 'expo-router';
 import { ImageBackground } from 'react-native';
 import CheckBox from 'expo-checkbox';
 
-
 export default function Profile() {
     const [username, setUsername] = useState('');
     const [preferences, setPreferences] = useState([]);
@@ -19,14 +18,14 @@ export default function Profile() {
 
     const retrieveUsername = async () => {
         try {
-            const username = await AsyncStorage.getItem('username')
+            const username = await AsyncStorage.getItem('username');
             if (username !== null) {
                 setUsername(username);
             }
         } catch (error) {
-            console.error("Failed to retrieve username due to error:", error)
+            console.error("Failed to retrieve username due to error:", error);
         }
-    }
+    };
 
     const handleCheckboxToggle = (checkbox, value) => {
         if (value) {
@@ -34,7 +33,7 @@ export default function Profile() {
         } else {
             setPreferences(preferences.filter(preference => preference !== checkbox));
         }
-    }
+    };
 
     useEffect(() => {
         retrieveUsername();
@@ -48,181 +47,163 @@ export default function Profile() {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.parse(JSON.stringify({
+                body: JSON.stringify({
                     preferences: preferences,
                     username: username
-                }))
+                })
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 console.log("Preferences added for username:", username);
-                navigation.navigate('main');
+                navigation.navigate('chat');
             } else {
-
+                console.error("Failed to add preferences");
             }
         } catch (error) {
-            console.error("Failed to add preferences for username:", username, "due to error:", error);
+            console.error("Error adding preferences for username:", username, "due to error:", error);
         }
-    }
+    };
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#000' }}>
+        <View style={styles.container}>
             <StatusBar barStyle="light-content" />
-            <Link href="/main">
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                    <ImageBackground source={require('../assets/arrow.png')} style={{ width: 20, height: 20, top: "9%", left: "2%" }} />
-                    <Text style={styles.Beirut}>Beirut</Text>
+
+            {/* Navigation Header */}
+            <Link href="/chat">
+                <View style={styles.header}>
+                    <ImageBackground source={require('../assets/arrow.png')} style={styles.arrowIcon} />
+                    <Text style={styles.headerText}>Beirut</Text>
                 </View>
             </Link>
-            <View style={{ display: "flex", flexDirection: "row", left: 250, top: -40 }}>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
-                    <Text style={styles.helloText}>{username}</Text>
-                    <View style={styles.icon} />
-                </View>
+
+            {/* Username Section */}
+            <View style={styles.usernameContainer}>
+                <Text style={styles.helloText}>{username}</Text>
             </View>
-            <View style={{ display: "flex", flexDirection: "column", padding: 20, borderRadius: 20, borderColor: 'white', borderWidth: 1, top: "10%", width: 350, left: 20 }}>
-                <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 }}>
-                    <Text style={{ color: "#fff", paddingTop: 15, paddingLeft: 5, fontSize: 30 }}>Preferences</Text>
-                    <Text style={{ color: "#fff", paddingTop: 15, paddingLeft: 5, fontSize: 20 }}>Select all that apply</Text>
-                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", paddingTop: 15 }}>
-                        <CheckBox
-                            value={toggleVeganCheckBox}
-                            onValueChange={newValue => {
-                                setToggleVeganCheckBox(newValue);
-                                handleCheckboxToggle("vegan", newValue);
-                            }}
-                            style={{ alignSelf: "center" }}
-                        />
-                        <Text style={{ color: "#fff", paddingTop: 3, paddingLeft: 5, fontSize: 14 }}>Vegan</Text>
-                    </View>
-                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", paddingTop: 15 }}>
-                        <CheckBox
-                            value={toggleVegetarianCheckBox}
-                            onValueChange={newValue => {
-                                setToggleVegetarianCheckBox(newValue);
-                                handleCheckboxToggle("vegetarian", newValue);
-                            }}
-                            style={{ alignSelf: "center" }}
-                        />
-                        <Text style={{ color: "#fff", paddingTop: 3, paddingLeft: 5, fontSize: 14 }}>Vegetarian</Text>
-                    </View>
-                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", paddingTop: 15 }}>
-                        <CheckBox
-                            value={toggleGlutenFreeCheckBox}
-                            onValueChange={newValue => {
-                                setToggleGlutenFreeCheckBox(newValue);
-                                handleCheckboxToggle("glutenFree", newValue);
-                            }}
-                            style={{ alignSelf: "center" }}
-                        />
-                        <Text style={{ color: "#fff", paddingTop: 3, paddingLeft: 5, fontSize: 14 }}>Gluten Free</Text>
-                    </View>
-                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", paddingTop: 15 }}>
-                        <CheckBox
-                            value={toggleHalalCheckBox}
-                            onValueChange={newValue => {
-                                setToggleHalalCheckBox(newValue);
-                                handleCheckboxToggle("halal", newValue);
-                            }}
-                            style={{ alignSelf: "center" }}
-                        />
-                        <Text style={{ color: "#fff", paddingTop: 3, paddingLeft: 5, fontSize: 14 }}>Halal</Text>
-                    </View>
-                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", paddingTop: 15 }}>
-                        <CheckBox
-                            value={toggleIndoorCheckBox}
-                            onValueChange={newValue => {
-                                setToggleIndoorCheckBox(newValue);
-                                handleCheckboxToggle("indoor", newValue);
-                            }}
-                            style={{ alignSelf: "center" }}
-                        />
-                        <Text style={{ color: "#fff", paddingTop: 3, paddingLeft: 5, fontSize: 14 }}>Indoor</Text>
-                    </View>
-                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", paddingTop: 15 }}>
-                        <CheckBox
-                            value={toggleOutdoorCheckBox}
-                            onValueChange={newValue => {
-                                setToggleOutdoorCheckBox(newValue);
-                                handleCheckboxToggle("outdoor", newValue);
-                            }}
-                            style={{ alignSelf: "center" }}
-                        />
-                        <Text style={{ color: "#fff", paddingTop: 3, paddingLeft: 5, fontSize: 14 }}>Outdoor</Text>
-                    </View>
+
+            {/* Preferences Section */}
+            <View style={styles.preferencesContainer}>
+                <Text style={styles.preferencesTitle}>Preferences</Text>
+
+                {/* Divider */}
+                <View style={styles.divider}></View>
+
+                <Text style={styles.preferencesSubtitle}>Select all that apply</Text>
+
+                <View style={styles.checkboxList}>
+                    {[
+                        { label: 'Vegan', state: toggleVeganCheckBox, setter: setToggleVeganCheckBox },
+                        { label: 'Vegetarian', state: toggleVegetarianCheckBox, setter: setToggleVegetarianCheckBox },
+                        { label: 'Gluten Free', state: toggleGlutenFreeCheckBox, setter: setToggleGlutenFreeCheckBox },
+                        { label: 'Halal', state: toggleHalalCheckBox, setter: setToggleHalalCheckBox },
+                        { label: 'Indoor', state: toggleIndoorCheckBox, setter: setToggleIndoorCheckBox },
+                        { label: 'Outdoor', state: toggleOutdoorCheckBox, setter: setToggleOutdoorCheckBox },
+                    ].map((item, index) => (
+                        <View key={index} style={styles.checkboxRow}>
+                            <Text style={styles.checkboxLabel}>{item.label}</Text>
+                            <CheckBox
+                                value={item.state}
+                                onValueChange={(newValue) => {
+                                    item.setter(newValue);
+                                    handleCheckboxToggle(item.label.toLowerCase(), newValue);
+                                }}
+                                style={styles.checkbox}
+                            />
+                        </View>
+                    ))}
                 </View>
-                <View style={{ paddingVertical: 20 }}>
-                    <Pressable style={styles.enterButton} onPress={addPreferences}>
-                        <Text style={styles.text}>Save</Text>
-                    </Pressable>
-                </View>
+
+                {/* Save Button */}
+                <Pressable style={styles.saveButton} onPress={addPreferences}>
+                    <Text style={styles.saveButtonText}>Save</Text>
+                </Pressable>
             </View>
-            <Pressable style={styles.logOutButton} onPress={() => navigation.navigate('index')}>
-                <Text style={styles.text}>Logout</Text>
-            </Pressable>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    helloText: {
-        fontFamily: "Hanken Grotesk",
-        fontStyle: "normal",
-        fontWeight: "500",
-        fontSize: 24,
-        lineHeight: 24,
-        top: -2,
-        color: "#fff",
-        paddingTop: 15,
-        paddingRight: 20,
+    container: {
+        flex: 1,
+        backgroundColor: '#000',
+        padding: 20,
     },
-    icon: {
-        width: 50,
-        height: 50,
-        borderRadius: 100,
-        right: 10,
-        top: -5,
-        backgroundColor: '#FFF',
-        justifyContent: 'center',
+    header: {
+        flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: 20,
     },
-    Beirut: {
+    arrowIcon: {
+        width: 20,
+        height: 20,
+    },
+    headerText: {
         fontFamily: "Hanken Grotesk",
-        fontStyle: "normal",
         fontWeight: "700",
         fontSize: 35,
         color: "#fff",
-        paddingLeft: 15
+        paddingLeft: 15,
     },
-    enterButton: {
+    usernameContainer: {
+        marginBottom: 30,
+        alignItems: 'flex-start',
+    },
+    helloText: {
+        fontFamily: "Hanken Grotesk",
+        fontWeight: "500",
+        fontSize: 24,
         color: "#fff",
-        backgroundColor: "#8B2635",
-        borderColor: "#fff",
+    },
+    preferencesContainer: {
+        padding: 20,
+        borderRadius: 20,
+        borderColor: 'white',
         borderWidth: 1,
-        borderRadius: 10,
-        width: 100,
-        alignItems: "center",
+        backgroundColor: '#222',
+    },
+    preferencesTitle: {
+        color: "#fff",
+        fontSize: 30,
+        textAlign: 'center',
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#fff',
+        marginVertical: 15,
+    },
+    preferencesSubtitle: {
+        color: "#fff",
+        fontSize: 20,
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    checkboxList: {
+        marginBottom: 20,
+    },
+    checkboxRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    checkbox: {
         alignSelf: "center",
     },
-    logOutButton: {
+    checkboxLabel: {
         color: "#fff",
-        backgroundColor: "#8B2635",
-        borderColor: "#fff",
-        borderWidth: 1,
-        borderRadius: 10,
-        width: 120,
-        bottom: -120,
-        alignItems: "center",
-        alignSelf: "center",
+        fontSize: 14,
     },
-    text: {
+    saveButton: {
+        backgroundColor: "#8B2635",
+        borderRadius: 10,
+        alignItems: "center",
+        paddingVertical: 12,
+    },
+    saveButtonText: {
         fontSize: 24,
         color: "#fff",
         fontFamily: "Hanken Grotesk",
-        fontStyle: "normal",
-        paddingVertical: 10,
-        paddingHorizontal: 20
     },
 });
