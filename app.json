@@ -1,24 +1,22 @@
 {
   "expo": {
-    "name": "se-project",
-    "slug": "se-project",
+    "name": "Beirut",
+    "slug": "Beirut",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "se-project",
+    "scheme": "Beirut",
     "backgroundColor": "#000000",
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/beirut.png"
     },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -28,9 +26,6 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "plugins": [
-      "expo-router",
-      "expo-font"
-    ]
+    "plugins": ["expo-router", "expo-font"]
   }
 }
