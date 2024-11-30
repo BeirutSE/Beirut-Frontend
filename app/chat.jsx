@@ -73,7 +73,14 @@ export default function Chat() {
       }
     };
 
+    // Initial load
     loadPreviousMessages();
+
+    // Polling every 10 seconds
+    const intervalId = setInterval(loadPreviousMessages, 10000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
   }, [chatTag]);
 
   const onChangeTextMessage = (text) => {
