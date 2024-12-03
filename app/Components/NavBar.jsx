@@ -150,7 +150,7 @@ export default function NavBar({ isOpen, onClose }) {
 
       {/* My Gallery Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>My Gallery</Text>
+        <Text style={styles.sectionTitle}>Gallery</Text>
         <TouchableOpacity
           style={styles.sectionItem}
           onPress={() => navigation.navigate("gallery")}

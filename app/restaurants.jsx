@@ -65,7 +65,7 @@ export default function Restaurants() {
 
     const fetchRestaurants = async (tags) => {
         try {
-            const response = await fetch(`https://yourbeirut.tech:3002/getRestaurantByCriteria?tags=${tags}`);
+            const response = await fetch(`https://yourbeirut.tech:3002/api/restaurants/getRestaurantByCriteria?tags=${tags}`);
             if (response.ok) {
                 const data = await response.json();
                 setRestaurants(data);

@@ -82,7 +82,7 @@ export default function Gallery() {
       <Link href="/chat" style={styles.backButton}>
         <Text style={styles.backButtonText}>←</Text>
       </Link>
-      <Text style={styles.title}>My Gallery</Text>
+      <Text style={styles.title}>Gallery</Text>
       {loading ? (
         <Text style={styles.loadingText}>Loading...</Text>
       ) : error ? (

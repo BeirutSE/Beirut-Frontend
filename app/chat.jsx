@@ -52,7 +52,6 @@ export default function Chat() {
           }
         );
         const data = await response.json();
-        console.log("Data:", data);
 
         // Process the data
         const processedMessages = data.map((msg) => ({
@@ -96,151 +95,38 @@ export default function Chat() {
     }
   };
 
-  // Function to animate mic button growth
-  const animateMicPressIn = () => {
-    Animated.spring(micSize, {
-      toValue: 60, // Increase size when long-pressed
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const animateMicPressOut = () => {
-    Animated.spring(micSize, {
-      toValue: 40, // Reset size when released
-      useNativeDriver: false,
-    }).start();
-  };
-
-  async function startRecording() {
-    try {
-      // Request permissions and set up recording
-      if (permissionResponse?.status !== "granted") {
-        await requestPermission();
-      }
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-
-      // Start collecting decibel levels
-      recording.setOnRecordingStatusUpdate((status) => {
-        if (status.metering && !isNaN(status.metering)) {
-          // Ensure it's a valid number
-          setDecibelLevels((prev) => {
-            const newLevels = [...prev.slice(-20), status.metering];
-            return newLevels;
-          });
-        }
-      });
-
-      animateMicPressIn();
-
-      await recording.startAsync();
-      setRecording(recording);
-    } catch (err) {
-      console.error("Failed to start recording", err);
-    }
-  }
-
-  async function stopRecording() {
-    try {
-      await recording.stopAndUnloadAsync();
-      const uri = recording.getURI();
-      setAudioUri(uri); // Save the URI
-      setRecording(null);
-      await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
-      animateMicPressOut();
-      sendVoiceNote(uri); // Call sendVoiceNote to send the voice message
-    } catch (error) {
-      console.error("Failed to stop recording", error);
-    }
-  }
-
-  const handleSendOrRecord = () => {
-    if (message) {
-      sendMessage();
-    } else {
-      if (recording) {
-        stopRecording();
-      } else {
-        startRecording();
-      }
-    }
-  };
-
   const sendMessage = async () => {
     try {
-      const response = await fetch("https://yourbeirut.tech:3002/sendMessage", {
+      setChatTag(3); // Set the chat tag to 3 for testing purposes
+      const response = await fetch("https://yourbeirut.tech:3002/api/chat/sendMessage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chatTag: chatTag,
           message: message,
+          senderType: "USER",
+          messageType: "Text",
         }),
       });
+      
       const data = await response.json();
-      // simulate the behavior of a fetch call
-      //   const data = {
-      //     response: "Message received successfully!",
-      //   };
-
-      // if (response.ok) {
-      const receivedMessage = data.response;
-      setAiMessage(receivedMessage);
-      setMessagesSent([
-        ...messagesSent,
-        { text: message, type: "user" },
-        { text: receivedMessage, type: "ai" },
-      ]);
-      setMessage("");
-      setIsMessageSent(true);
-      setHasTyped(false); // Reset hasTyped on message send
-      Keyboard.dismiss();
-      // } else {
-      //     console.error('Failed to send message:', message);
-      // }
+      if (response.ok) {
+        const receivedMessage = data.response;
+        setAiMessage(receivedMessage);
+        setMessagesSent([
+          ...messagesSent,
+          { text: message, type: "user" },
+          { text: receivedMessage, type: "ai" },
+        ]);
+        setMessage("");
+        setIsMessageSent(true);
+        setHasTyped(false); // Reset hasTyped on message send
+        Keyboard.dismiss();
+      } else {
+        console.error('Failed to send message:', message);
+      }
     } catch (error) {
       console.error("Error sending message:", error);
-    }
-  };
-
-  // Function to send the voice note message
-  const sendVoiceNote = async (uri) => {
-    try {
-      // Save the current decibel levels before resetting
-      const savedDecibelLevels = [...decibelLevels];
-
-      // Simulate server response for testing purposes
-      const simulatedResponse = {
-        response: "Voice note received successfully!",
-      };
-
-      // Display the simulated response in your app's chat
-      const receivedMessage = simulatedResponse.response;
-      setAiMessage(receivedMessage);
-      setIsMessageSent(true);
-
-      // Add the voice note message with URI instead of text
-      setMessagesSent([
-        ...messagesSent,
-        {
-          uri: uri,
-          type: "user",
-          isVoiceNote: true,
-          decibelLevels: [...decibelLevels],
-        }, // Voice note message with URI
-        { text: receivedMessage, type: "ai" },
-      ]);
-
-      setAudioUri(null);
-      setDecibelLevels([]); // Reset decibel levels
-    } catch (error) {
-      console.error("Error handling voice note:", error);
     }
   };
 
@@ -364,33 +250,17 @@ export default function Chat() {
             />
           </View>
           <TouchableOpacity
-            onPress={handleSendOrRecord}
-            onLongPress={message ? null : startRecording}
-            onPressOut={message ? null : stopRecording}
+            onPress={sendMessage}
           >
-            <Animated.View
+            <ImageBackground
+              source={require("../assets/send.png")
+              }
               style={{
-                width: micSize,
-                height: micSize,
-                borderRadius: micSize,
-                backgroundColor: "#8B2635",
-                justifyContent: "center",
-                alignItems: "center",
+                width: 20,
+                height: 20,
+                left: -1,
               }}
-            >
-              <ImageBackground
-                source={
-                  message
-                    ? require("../assets/send.png")
-                    : require("../assets/microphone.png")
-                }
-                style={{
-                  width: message ? 20 : 13,
-                  height: 20,
-                  left: message ? -1 : 0,
-                }}
-              />
-            </Animated.View>
+            />
           </TouchableOpacity>
         </View>
       </View>

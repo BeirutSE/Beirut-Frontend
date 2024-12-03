@@ -41,7 +41,7 @@ export default function Profile() {
 
     const addPreferences = async () => {
         try {
-            const response = await fetch('https://yourbeirut.tech:3002/addUserPreferences', {
+            const response = await fetch('https://yourbeirut.tech:3002/api/preferences/addPreference', {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',

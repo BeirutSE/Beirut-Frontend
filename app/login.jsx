@@ -33,7 +33,7 @@ export default function login() {
         console.log("Logging in with username:", username, "and password:", password)
 
         try {
-            const response = await fetch('https://yourbeirut.tech:3002/loginUser', {
+            const response = await fetch('https://yourbeirut.tech:3002/api/auth/loginUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
