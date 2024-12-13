@@ -19,6 +19,7 @@ import { Link } from "expo-router";
 import { Audio } from "expo-av";
 import AudioPlayer from "./Components/AudioPlayer.jsx";
 import NavBar from "./Components/NavBar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Chat() {
   const ScrollViewRef = useRef(null);
@@ -43,7 +44,8 @@ export default function Chat() {
   useEffect(() => {
     const loadPreviousMessages = async () => {
       try {
-        setChatTag(3); // Set the chat tag to 3 for testing purposes
+        const chatTag = await AsyncStorage.getItem("chatTag");
+        setChatTag(chatTag);
         const response = await fetch(
           `https://yourbeirut.tech:3002/api/chat/getUserMessages?chatTag=${chatTag}`,
           {
@@ -97,7 +99,8 @@ export default function Chat() {
 
   const sendMessage = async () => {
     try {
-      setChatTag(3); // Set the chat tag to 3 for testing purposes
+      const username = await AsyncStorage.getItem("username");
+      setChatTag(AsyncStorage.getItem("chatTag"));
       const response = await fetch(
         "https://yourbeirut.tech:3002/api/chat/sendMessage",
         {
@@ -108,6 +111,7 @@ export default function Chat() {
             message: message,
             senderType: "BEIRUT_APP",
             messageType: "Text",
+            username: username,
           }),
         }
       );

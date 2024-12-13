@@ -23,7 +23,7 @@ export default function Gallery() {
     const fetchImages = async () => {
       try {
         const response = await fetch(
-          "https://yourbeirut.tech:3002/api/chat/getUserImages?chatTag=3"
+          "https://yourbeirut.tech:3002/api/chat/getUserImages?chatTag=4"
         );
 
         if (!response.ok) {

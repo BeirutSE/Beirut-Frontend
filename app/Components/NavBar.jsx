@@ -57,7 +57,9 @@ export default function NavBar({ isOpen, onClose }) {
           style={styles.profilePic}
         />
         <View>
-          <Text style={styles.profileName}>Adnan Al Zahabi</Text>
+          <Text style={styles.profileName}>
+            {AsyncStorage.getItem("username")}
+          </Text>
           <Text style={styles.profileSubtext}>Lebanese</Text>
         </View>
       </View>
@@ -139,7 +141,10 @@ export default function NavBar({ isOpen, onClose }) {
         </TouchableOpacity>
 
         {/* More Button */}
-        <TouchableOpacity style={styles.moreButton}>
+        <TouchableOpacity
+          style={styles.moreButton}
+          onPress={() => navigation.navigate("restaurants")}
+        >
           <Text style={styles.moreText}>More</Text>
           <Feather name="chevron-right" size={16} color="white" />
         </TouchableOpacity>
