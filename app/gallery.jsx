@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
 import React, { useState, useEffect } from "react";
 import {
@@ -22,8 +23,10 @@ export default function Gallery() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
+        const chatTag = AsyncStorage.getItem("chatTag");
         const response = await fetch(
-          "https://yourbeirut.tech:3002/api/chat/getUserImages?chatTag=4"
+          "https://yourbeirut.tech:3002/api/chat/getUserImages?chatTag=" +
+            chatTag
         );
 
         if (!response.ok) {
